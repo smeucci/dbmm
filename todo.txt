@@ -1,0 +1,54 @@
+ELABORATO DBMM:
+
+
+- FATTO - automatizzare download delle immagini: fare in modo che l'url cicli in modo da prendere le prime 28 immagini di query e poi le seconde 28, 
+e così via fine ad un numero desiderato.
+- FATTO - fixare il fatto che non ti crea la cartella per la query 
+- IN SOSPESO - prendere in maniera automatica una lista di identità (football-data) e automatizzare il download per tutte queste identità
+- trovare lista di politici
+- usare lista di attori da vgg-face.mat
+- IN LAVORAZIONE - ottimizzare in termini di dimensioni immagini (per successivo crop per cnn) per storage
+- IN LAVORAZIONE - implementare in matlab il detector delle faccia ed il crop automatico con vgg
+- implementare downloader anche per google search (bing già fatto): problematico, metodo analogo a bing non funziona; usare custom search engine non pratico a meno di non pagare
+(gratis 100 richieste al giorno, dieci risultati per query)
+- provare image reverse search per google
+- provare yahoo e baidu
+- IN SOSPESO - implementare threading anche per le altre funzioni
+- implementare parallelismo su matlab per detector
+- FATTO - salvare il rank dell'immagine in modo da denominarle correttamente in base ad esso
+- FATTO - salvo solo identità e loro stato. (salvare href su db)
+- FATTO - riogarnizzare threading
+- FATTO - cambiare numero di href se rilasso la condizione sulla dimensione dell'immagine; posso anche toglierla del tutto ma a quel punto occorrerà fare un resize per le immagini troppo grandi.
+Per ora con query 'Leo Messi' trovo circa 500 immagini prima che si ripetano sistematicamente (ci saranno doppioni anche prima sicuramente).
+- FATTO - implementare la classe per le immagini
+
+PRIORITA':
+- FATTO - salvare su db url di immagini
+- FATTO - script che prende solo gli url e li salva su db, il resto dopo
+- FATTO - implementare proxy
+- fare fetcher e parser per altri se
+- implementare downloader: prende url da db, scarica e li salva su disco con multithreading
+- fare in modo che un crash non porti a perdita di dati già acquisiti (immagini, file dei path etc) e che si possa ripristinare il download da l'ultima query effettuata
+
+FUNZIONAMENTO:
+- data una lista di identità, devo recuperare le immagini relative e cropparle per cnn:
+    - lista di identità: la prendo da vgg o la trovo da qualche parte, la istanzia su matlab.
+    - recupero immagini: tramite script python chiamato da matlab, scarica, data una query, le n immagini relative, ne salva il path ed associa una label.
+    - crop: usando un face detector su matlab, una volta restituita un insieme di immagini per una query, trova la faccia e croppa l'immagine.
+    
+QUESTIONI:
+
+- decidere se è meglio scaricare tutte le immagini per tutte le identità e poi cropparle oppure scaricare un insieme di immagini per un'identità, cropparle e poi passare
+all'identità successiva. (risparmio in termini di storage necessario).
+- decidere il formato delle immagini da scaricare. Una risoluzione troppo elevata diventa onerosa da sostenere per il face detector (almeno in locale). 
+Limitare immagini a 1MB? Oppure prendere immagini nella categoria small? Tanto il crop fa uno scaling.
+- capire come integrare le varie ricerche su bing e google. Due chiamate diverse in matlab? Oppure un unica chiama allo stesso script che poi effettua entrambe le ricerche?
+- posso prima fare uno scraping generale degli href dai vari engine per tutte le entità e salvare gli url nel database. Successivamente scaricare, detect etc
+
+https://cse.google.com/cse?searchtype=image&start=1&num=20&q=monkey&client=google-csbe&output=json&cx=005294867147720465028:jm1ktvooogg#gsc.tab=1&gsc.q=monkey&gsc.page=17
+
+http://c2.staticflickr.com//6//5498//14065076288_1558e6dcd1_b.jpg
+
+http://image.baidu.com/search/index?tn=baiduimage&word=george%20clooney&pn=1
+
+
