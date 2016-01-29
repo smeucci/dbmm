@@ -1,6 +1,6 @@
 function face_detector(dataset, faceDet, data_path)
     
-    %warning off;
+    warning off;
     resize = 800; %resizing base on image height
     crop_dir = strrep([data_path, dataset{1, 1}], [dataset{1, 5}, '.jpg'], 'crop/');
     if ~exist(crop_dir, 'dir')
@@ -35,7 +35,7 @@ function face_detector(dataset, faceDet, data_path)
                         end
 
                         %save croped image to disk
-                        imwrite(crop, [crop_path, dataset{i, 3}, '-', num2str(j) ,'.jpg']);    
+                        imwrite(crop, [crop_path, dataset{i, 5}, '-', num2str(j) ,'.jpg']);    
 
                     end
 

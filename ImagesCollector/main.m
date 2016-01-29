@@ -8,8 +8,8 @@ start_time = clock;
 %load data path and set variables
 data_path = '/media/saverio/DATA/';
 collect = false;
-download = true;
-detect = false;
+download = false;
+detect = true;
 num_to_collect = 10;
 
 %load list of identities
@@ -27,15 +27,14 @@ if collect == true
         [ids, lbls] = textread(identities_txt, '%s %s', 'delimiter', '+');
         ok_labels = cat(2, lbls);
         ok_identities = cat(2, ids);
-        list_ok_lbl = setdiff(classes.name, ok_labels');
-        list_ok_id = setdiff(classes.description, ok_identities);
+        list_ok_lbl = setdiff(classes.name, ok_labels', 'stable');
+        list_ok_id = setdiff(classes.description, ok_identities, 'stable');
     else
         list_ok_lbl = classes.name;
         list_ok_id = classes.description;
     end
     
-    
-    for i = 1:2%size(list_ok_lbl, 2)
+    for i = 1:4%size(list_ok_lbl, 2)
         identity = list_ok_id{i, 1};
         label = list_ok_lbl{1, i};
         
@@ -57,14 +56,14 @@ if download == true
         [ids, lbls] = textread(identities_txt, '%s %s', 'delimiter', '+');
         done_labels = cat(2, lbls);
         done_identities = cat(2, ids);
-        list_done_lbl = setdiff(classes.name, done_labels');
-        list_done_id = setdiff(classes.description, done_identities);
+        list_done_lbl = setdiff(classes.name, done_labels', 'stable');
+        list_done_id = setdiff(classes.description, done_identities, 'stable');
     else
         list_done_lbl = classes.name;
         list_done_id = classes.description;
     end
     
-    for i = 1:2%size(list_done_lbl, 2)
+    for i = 1:4%size(list_done_lbl, 2)
         identity = list_done_id{i, 1};
         label = list_done_lbl{1, i};
     
@@ -83,18 +82,18 @@ if detect == true
     
     %start the parallel pool
     gcp();
-    parfor i = 1:4%size(classes.name, 2)
-        identity = classes.description{i, 1};
-        label = classes.name{1, i};
+    parfor idx = 1:4%size(classes.name, 2)
+        identity = classes.description{idx, 1};
+        label = classes.name{1, idx};
         file_path = [data_path, 'img/', label, '_', identity, '/', label, '_paths.txt'];
         if exist(file_path, 'file')
             [images, labels, names, engines, ranks] = textread(file_path, '%s %s %s %s %s', 'delimiter', '+');
             tmp = cat(2, images, labels, names, engines, ranks);
-            dataset{i, 1} = tmp;
+            dataset{idx, 1} = tmp;
+            
+            face_detector(dataset{idx, 1}, faceDet, data_path)
         end
-        
-        face_detector(dataset{i, 1}, faceDet, data_path)
-        
+                
     end
     %shutdown parallel pool
     delete(gcp)
