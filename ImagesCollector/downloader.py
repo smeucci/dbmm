@@ -44,7 +44,7 @@ class Image:
 
 
 
-def downloader(identity):
+def downloader(identity, DATA_DIR):
     
     start = timer()
     #take image urls for an identity from db
@@ -59,8 +59,8 @@ def downloader(identity):
     #if queue is not empty, save images to disk (status = DONE), else end script (STATUS = ERR_D)
     if not queue.empty():
         queue_size = queue.qsize()
-        print identity['name'] + ' - Saving..'
-        save(queue)
+        print identity['name'] + ' - Saving to disk..'
+        save(queue, identity, DATA_DIR)
         print 'Donwload terminated for identity: ' + identity['name'] + ' Number of images saved: ' \
             + str(queue_size) + ' - Elapsed time: ' + str((timer() - start))
     else: 
@@ -71,32 +71,32 @@ def downloader(identity):
 #start the threads
 def download_master(images, queue):
     threads = []
-    for image in images:
-        t = Thread(target=download_slave, args=(queue, image))
-        threads.append(t)
-
-    for t in threads:
-        t.start()
+    if images:
+        for image in images:
+            t = Thread(target=download_slave, args=(queue, image))
+            threads.append(t)
+    
+        for t in threads:
+            t.start()
+                
+        for t in threads:
+            t.join()
             
-    for t in threads:
-        t.join()
-        
 
 def download_slave(queue, image):
     header = {'User-Agent': 'Mozilla/5.0'} 
     raw = None
     try:
-        request = urllib2.Request(image.href, headers=header)
+        request = urllib2.Request(image.url, headers=header)
         search = urllib2.urlopen(request, timeout=5)
         raw = search.read()           
     except:
         return None
     else:
         if len(raw) >= 50000:
-            print 'Downloaded from: ' + image.href + ' - rank: ' + str(image.rank)
             image.set_raw(raw)
-            queue.put(image)       
-    
+            queue.put(image)
+            print image.identity + ' - Downloaded from: ' + image.url + ' - engine: ' + str(image.engine)    
     
 
 def save(queue, identity, DATA_DIR):
@@ -121,18 +121,20 @@ def save(queue, identity, DATA_DIR):
         for image in images:
             #create folder images retrieve from a certain search engine
             images_dir = identity_dir + image.engine + '/'
-            if not os.path.exists(identity_dir):
-                os.makedirs(identity_dir)
+            if not os.path.exists(images_dir):
+                os.makedirs(images_dir)
             #save image
-            image_dir = images_dir + str(image.rank) + '.jpg'
-            f = open(image_dir, 'wb')
+            image_path = images_dir + str(image.rank) + '.jpg'
+            f = open(image_path, 'wb')
             f.write(image.raw)
             f.close()
             #save image path to txt file
             paths = open(identity_dir + identity['label'] + '_paths.txt', 'ab')
-            paths.write(image_dir.repr(DATA_DIR, '') + '+' + identity['label'] + '+' + identity['name'] + '+' + image.engine + '+' + image.rank)
+            string = image_path.replace(DATA_DIR, '') + '+' + identity['label'] + '+' + identity['name'] + \
+                        '+' + image.engine + '+' + str(image.rank) + '\n'
+            paths.write(string)
             paths.close()
-            print 'Saved: ' + image_dir
+            print 'Saved: ' + image_path
     
         update_identity_images(identity, len(images))
         update_identity_status(identity, 'DONE')
@@ -150,7 +152,7 @@ def select_urls(identity):
     images = []
     try:
         cursor.execute("""
-            SELEC * from identities
+            SELECT * from urls
             WHERE label = %s && identity = %s
         """, (identity['label'], identity['name']))       
         data = cursor.fetchall()
@@ -168,6 +170,9 @@ def select_urls(identity):
     db.close()
     if rollback == True:
         print 'Rollback: select_urls'
+        return None
+    elif rollback == False:
+        return images
      
 #update number of images downloaded for an identity
 def update_identity_images(identity, queue_size):
@@ -212,14 +217,28 @@ def update_identity_status(identity, status):
     if rollback == True:
         print 'Rollback: update_identity_status'
     
+   
+    
+########################
+##### START SCRIPT #####
+########################
     
     
-    
-    
-    
-    
-    
-    
+if len(sys.argv) > 1:
+    identity = {
+            'name': sys.argv[1].encode('utf-8'),
+            'label': sys.argv[2].encode('utf-8')
+    }
+    DATA_DIR = sys.argv[3].encode('utf-8')
+else:
+    identity = {
+            'name': 'Leo_Messi',
+            'label': str(1)
+    }
+    DATA_DIR='/media/saverio/DATA/'
+
+
+downloader(identity, DATA_DIR)    
     
     
     
