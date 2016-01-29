@@ -59,7 +59,6 @@ def search(identity, num_of_imgs):
             'header': {'User-Agent': 'Mozilla/5.0'} 
     }
     
-    #fetcher(queue, 'bing', data)
     #start threads
     threads = []
     bing_search = Thread(target=fetcher, args=(queue, 'bing', data))
@@ -73,14 +72,14 @@ def search(identity, num_of_imgs):
     for t in threads:
         t.join()
     
-    #if queue is not empty, save results to db (status = OK), else end script (STATUS = ERR)
+    #if queue is not empty, save urls to db (status = OK), else end script (STATUS = ERR_F)
     if not queue.empty():
         queue_size = queue.qsize()
-        save_url_to_db(queue, identity)
+        insert_urls(queue, identity, queue_size)
         print 'Donwload terminated for identity: ' + identity['name'] + ' - Number of images: ' \
             + str(queue_size) + ' - Elapsed time: ' + str((timer() - start))
     else:
-        update_identity_status(identity, 'ERR')
+        update_identity_status(identity, 'ERR_F')
         print 'Donwload terminated for identity: ' + identity['name'] + ' - Elapsed time: ' + str((timer() - start))     
         
 
@@ -186,7 +185,7 @@ def get_html(url, header):
 ## DB FUNCTIONS ##
 
 #insert a new identity in the db
-def new_identity(identity, status):    
+def insert_identity(identity, status):    
     db = MySQLdb.connect('127.0.0.1', 'root', 'pwd', 'collector')
     cursor = db.cursor()  
     rollback = False
@@ -226,10 +225,32 @@ def update_identity_status(identity, status):
     db.close()
     if rollback == True:
         print 'Rollback: update_identity_status'
+        
+
+#update number of urls fetched for an identity
+def update_identity_urls(identity, queue_size):
+    db = MySQLdb.connect('127.0.0.1', 'root', 'pwd', 'collector')
+    cursor = db.cursor() 
+    rollback = False
+                      
+    try:
+        cursor.execute("""
+            UPDATE identities SET urls = %s 
+            WHERE id = %s && name = %s
+        """, (queue_size, identity['label'], identity['name']))       
+        db.commit()
+        print 'Number of urls fetched for ' + identity['name'] + ' : ' + str(queue_size)
+    except:
+        db.rollback()
+        rollback = True
+        
+    db.close()
+    if rollback == True:
+        print 'Rollback: update_identity_status'
 
 
 #save info (url, etc..) of an image to db
-def save_url_to_db(queue, identity):
+def insert_urls(queue, identity, queue_size):
     print identity['name'] + ' - Saving to db..'
     db = MySQLdb.connect('127.0.0.1', 'root', 'pwd', 'collector')
     cursor = db.cursor()
@@ -256,9 +277,10 @@ def save_url_to_db(queue, identity):
     db.close()
     if rollback == True:
         print 'Rollback: save_url_to_db'
-        update_identity_status(identity, 'ERR')
+        update_identity_status(identity, 'ERR_F')
     else:
         update_identity_status(identity, 'OK')
+        update_identity_urls(identity, queue_size)
         
 
 
@@ -279,10 +301,10 @@ else:
             'label': str(1)
     }
     #DIR='/media/saverio/DATA/img/'
-    num_of_imgs = 500
+    num_of_imgs = 100
         
 
-new_identity(identity, 'NULL')
+insert_identity(identity, 'NULL')
 print 'Identity: ' + identity['name']
 search(identity, num_of_imgs)
         
