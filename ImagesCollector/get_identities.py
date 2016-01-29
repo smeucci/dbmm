@@ -18,10 +18,17 @@ def get_identities(status, DATA_DIR):
         os.remove(identities_path)
     
     try:
-        cursor.execute("""
-            SELECT id, name from identities
-            WHERE status = %s
-        """, (status))       
+        if status == 'OK':
+            cursor.execute("""
+                SELECT id, name from identities
+                WHERE status = %s or status = %s
+            """, ('OK', 'DONE'))
+        elif status == 'DONE':
+            cursor.execute("""
+                SELECT id, name from identities
+                WHERE status = %s
+            """, (status))
+            
         data = cursor.fetchall()
         
         if data:
@@ -51,7 +58,7 @@ if len(sys.argv) > 1:
     status = sys.argv[1].encode('utf-8')
     DATA_DIR = sys.argv[2].encode('utf-8')
 else:
-    status = 'DONE'
+    status = 'OK'
     DATA_DIR='/media/saverio/DATA/'
 
 

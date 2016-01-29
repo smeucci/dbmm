@@ -7,8 +7,8 @@ start_time = clock;
 
 %load data path and set variables
 data_path = '/media/saverio/DATA/';
-collect = true;
-download = false;
+collect = false;
+download = true;
 detect = false;
 num_to_collect = 10;
 
@@ -23,19 +23,24 @@ if collect == true
     system(ok_identities_cmd);
     
     %build list to collect
-    [ids, lbls] = textread(identities_txt, '%s %s', 'delimiter', '+');
-    ok_labels = cat(2, lbls);
-    ok_identities = cat(2, ids);
-    list_ok_lbl = setdiff(classes.name, ok_labels');
-    list_ok_id = setdiff(classes.description, ok_identities);
+    if exist(identities_txt, 'file')
+        [ids, lbls] = textread(identities_txt, '%s %s', 'delimiter', '+');
+        ok_labels = cat(2, lbls);
+        ok_identities = cat(2, ids);
+        list_ok_lbl = setdiff(classes.name, ok_labels');
+        list_ok_id = setdiff(classes.description, ok_identities);
+    else
+        list_ok_lbl = classes.name;
+        list_ok_id = classes.description;
+    end
     
     
-    for i = 1:size(list_ok_lbl, 2)
+    for i = 1:2%size(list_ok_lbl, 2)
         identity = list_ok_id{i, 1};
         label = list_ok_lbl{1, i};
         
         collect_cmd = ['python collector.py ', '"', identity, '" ', '"', label, '" ', '"', num2str(num_to_collect), '"'];
-        system(collect_cmd)
+        system(collect_cmd);
     
     end
 end
@@ -48,18 +53,22 @@ if download == true
     system(done_identities_cmd);
     
     %build list to download
-    [ids, lbls] = textread(identities_txt, '%s %s', 'delimiter', '+');
-    done_labels = cat(2, lbls);
-    done_identities = cat(2, ids);
-    list_done_lbl = setdiff(classes.name, done_labels');
-    list_done_id = setdiff(classes.description, done_identities);
+    if exist(identities_txt, 'file')
+        [ids, lbls] = textread(identities_txt, '%s %s', 'delimiter', '+');
+        done_labels = cat(2, lbls);
+        done_identities = cat(2, ids);
+        list_done_lbl = setdiff(classes.name, done_labels');
+        list_done_id = setdiff(classes.description, done_identities);
+    else
+        list_done_lbl = classes.name;
+        list_done_id = classes.description;
+    end
     
-    
-    for i = 1:size(list_done_lbl, 2)
+    for i = 1:2%size(list_done_lbl, 2)
         identity = list_done_id{i, 1};
         label = list_done_lbl{1, i};
     
-        download_cmd = ['python download.py ', '"', identity, '" ', '"', label, '" ', '"', [data_path, 'img/'], '" '];
+        download_cmd = ['python downloader.py ', '"', identity, '" ', '"', label, '" ', '"', data_path, '" '];
         system(download_cmd);
     end
 end
