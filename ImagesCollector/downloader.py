@@ -1,10 +1,7 @@
-from bs4 import BeautifulSoup
 import sys
-import re
 import urllib2
 import Queue
 import MySQLdb
-import math
 import os
 from time import time as timer
 from threading import Thread
@@ -53,9 +50,7 @@ def downloader(identity, DATA_DIR):
     #start multithreading
     queue = Queue.Queue(maxsize=0)
     download_master(images, queue)
-    
-    print 'Finish donwloading images for identity: ' + identity['name']
-    
+        
     #if queue is not empty, save images to disk (status = DONE), else end script (STATUS = ERR_D)
     if not queue.empty():
         queue_size = queue.qsize()
@@ -63,7 +58,7 @@ def downloader(identity, DATA_DIR):
         save(queue, identity, DATA_DIR)
         print 'Donwload terminated for identity: ' + identity['name'] + ' Number of images saved: ' \
             + str(queue_size) + ' - Elapsed time: ' + str((timer() - start))
-    else: 
+    else:
         update_identity_status(identity, 'ERR_D')
         print 'Donwload failed for identity: ' + identity['name'] + ' - Elapsed time: ' + str((timer() - start))  
     
@@ -82,7 +77,9 @@ def download_master(images, queue):
         for t in threads:
             t.join()
             
+        print 'Finish donwloading images for identity: ' + identity['name']
 
+    
 def download_slave(queue, image):
     header = {'User-Agent': 'Mozilla/5.0'} 
     raw = None
@@ -157,12 +154,16 @@ def select_urls(identity):
         """, (identity['label'], identity['name']))       
         data = cursor.fetchall()
         
-        for row in data:
-            image = Image()
-            image.set_attr(row[0], row[1], row[2], row[3], row[4], row[5])
-            images.append(image)
-            
-        print 'Selected images from db: ' + identity['name']
+        if data:
+            for row in data:
+                image = Image()
+                image.set_attr(row[0], row[1], row[2], row[3], row[4], row[5])
+                images.append(image)
+                
+            print 'Selected images from db: ' + identity['name']
+        else:
+            print 'No results for identity: ' + identity['name']
+            return None
     except:
         db.rollback()
         rollback = True
@@ -232,8 +233,8 @@ if len(sys.argv) > 1:
     DATA_DIR = sys.argv[3].encode('utf-8')
 else:
     identity = {
-            'name': 'Leo_Messi',
-            'label': str(1)
+            'name': 'A.J._Buckley',
+            'label': 'n00000001'
     }
     DATA_DIR='/media/saverio/DATA/'
 

@@ -185,15 +185,15 @@ def get_html(url, header):
 ## DB FUNCTIONS ##
 
 #insert a new identity in the db
-def insert_identity(identity, status):    
+def insert_identity(identity):    
     db = MySQLdb.connect('127.0.0.1', 'root', 'pwd', 'collector')
     cursor = db.cursor()  
     rollback = False
     try:
         cursor.execute("""
-            INSERT INTO identities (id, name, status) 
-            VALUES (%s, %s, %s)
-        """, (identity['label'], identity['name'], status))       
+            INSERT INTO identities (id, name) 
+            VALUES (%s, %s)
+        """, (identity['label'], identity['name']))       
         db.commit()
         print 'Save to db: ' + identity['name']
     except:
@@ -293,20 +293,18 @@ if len(sys.argv) > 1:
             'name': sys.argv[1].encode('utf-8'),
             'label': sys.argv[2].encode('utf-8')
     }
-    #DIR = sys.argv[3].encode('utf-8')
     num_of_imgs = int(sys.argv[3])
 else:
     identity = {
-            'name': 'Leo_Messi',
-            'label': str(1)
+            'name': 'A.J._Buckley',
+            'label': 'n00000001'
     }
-    #DIR='/media/saverio/DATA/img/'
-    num_of_imgs = 100
+    num_of_imgs = 10
         
 
-insert_identity(identity, 'NULL')
+insert_identity(identity)
 print 'Identity: ' + identity['name']
 search(identity, num_of_imgs)
-        
+
         
         

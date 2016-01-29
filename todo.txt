@@ -27,7 +27,7 @@ PRIORITA':
 - FATTO - script che prende solo gli url e li salva su db, il resto dopo
 - FATTO - implementare proxy
 - fare fetcher e parser per altri se
-- implementare downloader: prende url da db, scarica e li salva su disco con multithreading
+- FATTO - implementare downloader: prende url da db, scarica e li salva su disco con multithreading
 - fare in modo che un crash non porti a perdita di dati già acquisiti (immagini, file dei path etc) e che si possa ripristinare il download da l'ultima query effettuata
 
 FUNZIONAMENTO:
@@ -44,6 +44,7 @@ all'identità successiva. (risparmio in termini di storage necessario).
 Limitare immagini a 1MB? Oppure prendere immagini nella categoria small? Tanto il crop fa uno scaling.
 - capire come integrare le varie ricerche su bing e google. Due chiamate diverse in matlab? Oppure un unica chiama allo stesso script che poi effettua entrambe le ricerche?
 - posso prima fare uno scraping generale degli href dai vari engine per tutte le entità e salvare gli url nel database. Successivamente scaricare, detect etc
+-  la lista delle identità la prendo da matlab che chiama poi collector, o da collector leggo lista e chiamo search?: con matlab posso usare parpool, 4 utenti insieme, da python multiprocessing
 
 https://cse.google.com/cse?searchtype=image&start=1&num=20&q=monkey&client=google-csbe&output=json&cx=005294867147720465028:jm1ktvooogg#gsc.tab=1&gsc.q=monkey&gsc.page=17
 
