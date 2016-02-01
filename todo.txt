@@ -32,6 +32,7 @@ PRIORITA':
 - implementare parpool su matlab per collector e downloader
 - QS - sistemare salvataggio nella cartella crop
 - FATTO - sistemare come prendo la differenza di liste
+- sistemare url yahoo
 
 FUNZIONAMENTO:
 - data una lista di identità, devo recuperare le immagini relative e cropparle per cnn:
@@ -55,4 +56,12 @@ http://c2.staticflickr.com//6//5498//14065076288_1558e6dcd1_b.jpg
 
 http://image.baidu.com/search/index?tn=baiduimage&word=george%20clooney&pn=1
 
+http://www.picsearch.com/index.cgi?start=0&q=leo%20messi
 
+turlL":[\'"]?([^\'" <>]+)  iurl
+
+https://duckduckgo.com/i.js?q=leo+messi&s=1&s=4
+
+http://fresh-proxy.appspot.com/www.bing.com/images/search?q=leo+messi&first=1&count=28
+
+https://it.images.search.yahoo.com/search/images?p=leo+messi&b=3

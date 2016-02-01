@@ -5,6 +5,7 @@ import urllib2
 import Queue
 import MySQLdb
 import math
+import json
 from time import time as timer
 from threading import Thread
 
@@ -62,9 +63,13 @@ def search(identity, num_of_imgs):
     #start threads
     threads = []
     bing_search = Thread(target=fetcher, args=(queue, 'bing', data))
-    #baidu_search = Thread(target=fetcher, args=(queue, 'baidu', data))
+    aol_search = Thread(target=fetcher, args=(queue, 'aol', data))
+    #duck_search = Thread(target=fetcher, args=(queue, 'duck', data))
+    yahoo_search = Thread(target=fetcher, args=(queue, 'yahoo', data))
     threads.append(bing_search)
-    #threads.append(baidu_search)
+    threads.append(aol_search)
+    #threads.append(duck_search)
+    threads.append(yahoo_search)
     
     for t in threads:
         t.start()
@@ -87,7 +92,9 @@ def search(identity, num_of_imgs):
 def fetcher(queue, search_engine, data):
     switcher =  {
             'bing': fetcher_bing,
-            'baidu': fetcher_baidu,
+            'aol': fetcher_aol,
+            'duck': fetcher_duck,
+            'yahoo': fetcher_yahoo
     }
     func = switcher.get(search_engine)
     return func(queue, search_engine, data)
@@ -107,7 +114,7 @@ def fetcher_bing(queue, search_engine, data):
     for rnd in range(0, rounds):
         
         #create the query url       
-        url = proxy_url + 'http://www.bing.com/images/search?q='+data['query']+'&first='+str(first)+'&count='+str(count)
+        url = 'http://www.bing.com/images/search?q='+data['query']+'&first='+str(first)+'&count='+str(count)
                             
         #get html page for the query    
         html = get_html(proxy_url + url.encode('utf-8'), data['header'])
@@ -117,27 +124,114 @@ def fetcher_bing(queue, search_engine, data):
             'first': first,
             'count': count,
             'round': rnd,
-            'proxy': proxy_conc,
+            'proxy': proxy_url,
             'query': data['query'],
             'label': data['label'],
             'engine': search_engine
         }
         parser(html, info, queue)
                     
-        #donwload images for the query
-        first = (28*(rnd + 1)) + 1
+        first = (count*(rnd + 1)) + 1
     
     
 #fetcher the images for a given query from baidu
-def fetcher_baidu():
-    pass
+def fetcher_aol(queue, search_engine, data):
+    #the proxy to use
+    proxy = 'http://anonymouse.org'
+    proxy_conc = '/cgi-bin/anon-www.cgi/'
+    proxy_url = proxy + proxy_conc
+    
+    count = 20
+    rounds = int(math.ceil((data['num_of_imgs']) / count)) + 1
+    
+    
+    for rnd in range(0, rounds):
+        #create the query url       
+        url = 'http://search.aol.com/aol/image?q='+data['query']+'&page='+str(rnd+1)
+                            
+        #get html page for the query    
+        html = get_html(proxy_url + url.encode('utf-8'), data['header'])
+        
+        #retrieve the imgurls for the query by parsing the html page
+        info = {
+            'count': count,
+            'round': rnd,
+            'proxy': proxy_conc,
+            'query': data['query'],
+            'label': data['label'],
+            'engine': search_engine
+        }
+        parser(html, info, queue)
 
+
+def fetcher_duck(queue, search_engine, data):
+    #the proxy to use
+    proxy = 'http://fresh-proxy.appspot.com/'
+    proxy_conc = ''
+    proxy_url = proxy + proxy_conc
+    
+    count = 35
+    rounds = int(math.ceil((data['num_of_imgs']) / count)) + 1
+    
+    
+    for rnd in range(0, rounds):
+        #create the query url       
+        url = proxy_url + 'duckduckgo.com/i.js?q='+data['query']+'&s='+str(rnd)
+                            
+        #get html page for the query    
+        html = get_html(url.encode('utf-8'), data['header'])
+        
+        #retrieve the imgurls for the query by parsing the html page
+        info = {
+            'count': count,
+            'round': rnd,
+            'proxy': proxy_conc,
+            'query': data['query'],
+            'label': data['label'],
+            'engine': search_engine
+        }
+        parser(html, info, queue)
+
+    
+def fetcher_yahoo(queue, search_engine, data):
+    #the proxy to use
+    proxy = 'http://fresh-proxy.appspot.com/'
+    proxy_conc = ''
+    proxy_url = proxy + proxy_conc
+    
+    first, count = 1, 40
+    rounds = int(math.ceil((data['num_of_imgs']) / count)) + 1
+    
+    for rnd in range(0, rounds):
+        
+        #create the query url       
+        url = 'images.search.yahoo.com/search/images?p=leo+messi&b='+str(first)
+                            
+        #get html page for the query    
+        html = get_html(proxy_url + url.encode('utf-8'), data['header'])
+        
+        #retrieve the imgurls for the query by parsing the html page
+        info = {
+            'first': first,
+            'count': count,
+            'round': rnd,
+            'proxy': proxy_url,
+            'query': data['query'],
+            'label': data['label'],
+            'engine': search_engine
+        }
+        parser(html, info, queue)
+                    
+        first = (count*(rnd + 1)) + 1
+    
 
 #PARSER: select the parser based on the search engine to use
 def parser(html, info, queue):
     switcher =  {
             'bing': parser_bing,
-            'baidu': parser_baidu,
+            'aol': parser_aol,
+            'duck': parser_duck,
+            'yahoo': parser_yahoo
     }
     func = switcher.get(info['engine'])
     return func(html, info, queue)
@@ -146,36 +240,110 @@ def parser(html, info, queue):
 #parse the data from a html response from bing 
 def parser_bing(html, info, queue):
     #rank base of the current round
-    rank = (info['count'] * info['round'])
+    rank = (info['count'] * info['round']) + 1
     num = 0
-    for div in html.find_all('div', class_='item'):
-        for a in div.find_all('a', class_='thumb'):
-            imgurl = re.search('href=[\'"]?([^\'" >]+)', str(a))
-            if imgurl:
-                #inizialize object of class Image
-                img = Image()
-                #parse the url
-                url = imgurl.group(0).replace('href="', '').replace(info['proxy'], '')
-                #compute the rank of the image
-                img_rank = rank + 1
-                #build a unique id for the image
-                img_id = info['engine'] + str(img_rank) + '_' + info['label']
-                #set attributes of the object
-                img.set_attr(img_id, info['label'], info['query'].replace('+', '_'), url, img_rank , info['engine'])
-                #put into queue
-                queue.put(img)
-                #update rank
-                rank = rank + 1
-                num = num + 1 #info, just for testing
+    #for div in html.find_all('div', class_='item'):
+    for a in html.find_all('a', class_='thumb'):
+        imgurl = re.search('href=[\'"]?([^\'" >]+)', str(a))
+        if imgurl:
+            #inizialize object of class Image
+            img = Image()
+            #parse the url
+            url = imgurl.group(0).replace('href="', '').replace(info['proxy'], '')
+            #compute the rank of the image
+            img_rank = rank
+            #build a unique id for the image
+            img_id = info['engine'] + str(img_rank) + '_' + info['label']
+            #set attributes of the object
+            img.set_attr(img_id, info['label'], info['query'].replace('+', '_'), url, img_rank , info['engine'])
+            #put into queue
+            queue.put(img)
+            #update rank
+            rank = rank + 1
+            num = num + 1 #info, just for testing
     
     print info['query'].replace('+', '_') + ' - Number of fetched urls by bing: ' + str(queue.qsize()) + \
                                              ' - num: ' + str(num)
 
 
 #parse the data from a html response from baidu
-def parser_baidu():
-    pass
+def parser_aol(html, info, queue):
+    rank = (info['count'] * info['round']) + 1
+    num = 0
+    for p in html.find_all('p', {'property': 'f:url'}):
+        imgurl = re.search('http[\'"]?([^\'" <>]+)', str(p))
+        if imgurl:
+            #inizialize object of class Image
+            img = Image()
+            #parse the url
+            url = imgurl.group(0)
+            #compute the rank of the image
+            img_rank = rank
+            #build a unique id for the image
+            img_id = info['engine'] + str(img_rank) + '_' + info['label']
+            #set attributes of the object
+            img.set_attr(img_id, info['label'], info['query'].replace('+', '_'), url, img_rank , info['engine'])
+            #put into queue
+            queue.put(img)
+            #update rank
+            rank = rank + 1
+            num = num + 1 #info, just for testing
+                
+    print info['query'].replace('+', '_') + ' - Number of fetched urls by aol: ' + str(queue.qsize()) + \
+                                             ' - num: ' + str(num)
 
+def parser_duck(html, info, queue):
+    rank = (info['count'] * info['round']) + 1
+    num = 0
+    #parser the html
+    imgurls = re.findall('image":[\'"]?([^\'" <>]+)', str(html))
+    for imgurl in imgurls:
+        if imgurl:
+            #inizialize object of class Image
+            img = Image()
+            #parse the url
+            url = imgurl
+            #compute the rank of the image
+            img_rank = rank
+            #build a unique id for the image
+            img_id = info['engine'] + str(img_rank) + '_' + info['label']
+            #set attributes of the object
+            img.set_attr(img_id, info['label'], info['query'].replace('+', '_'), url, img_rank , info['engine'])
+            #put into queue
+            queue.put(img)
+            #update rank
+            rank = rank + 1
+            num = num + 1 #info, just for testing
+    
+                
+    print info['query'].replace('+', '_') + ' - Number of fetched urls by duckduckgo: ' + str(queue.qsize()) + \
+                                             ' - num: ' + str(num)
+                                             
+def parser_yahoo(html, info, queue):
+    rank = (info['count'] * info['round']) + 1
+    num = 0
+    #parser the html
+    imgurls = re.findall('iurl":[\'"]?([^\'" <>]+)', str(html))
+    for imgurl in imgurls:
+        if imgurl:
+            #inizialize object of class Image
+            img = Image()
+            #parse the url
+            url = imgurl.replace("'\'", "")
+            #compute the rank of the image
+            img_rank = queue.qsize()
+            #build a unique id for the image
+            img_id = info['engine'] + str(img_rank) + '_' + info['label']
+            #set attributes of the object
+            img.set_attr(img_id, info['label'], info['query'].replace('+', '_'), url, img_rank , info['engine'])
+            #put into queue
+            queue.put(img)
+            #update rank
+            rank = rank + 1
+            num = num + 1 #info, just for testing
+            
+    print info['query'].replace('+', '_') + ' - Number of fetched urls by yahoo: ' + str(queue.qsize()) + \
+                                             ' - num: ' + str(num)
 
 #get the html page for a given url
 def get_html(url, header):
@@ -262,7 +430,7 @@ def insert_urls(queue, identity, queue_size):
         queue.task_done()
         im = (img.id, img.label, img.identity, img.url, img.rank, img.engine)
         images.append(im)
-
+        
     try:
         cursor.executemany("""
             INSERT INTO urls (id, label, identity, url, rank, engine) 
@@ -297,9 +465,9 @@ if len(sys.argv) > 1:
 else:
     identity = {
             'name': 'A.J._Buckley',
-            'label': 'n00000001'
+            'label': 'n00000001-test'
     }
-    num_of_imgs = 10
+    num_of_imgs = 50
         
 
 insert_identity(identity)

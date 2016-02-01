@@ -234,21 +234,13 @@ if len(sys.argv) > 1:
 else:
     identity = {
             'name': 'A.J._Buckley',
-            'label': 'n00000001'
+            'label': 'n00000001-test'
     }
     DATA_DIR='/media/saverio/DATA/'
 
 
 downloader(identity, DATA_DIR)    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+   
     
     
     

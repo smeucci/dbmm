@@ -287,11 +287,13 @@ else:
     num_of_imgs = 850
 
 #Bing Search
-bing_search(identity, label, num_of_imgs, DIR)
+#bing_search(identity, label, num_of_imgs, DIR)
 
 #url = 'http://www.bing.com/images/search?q=Leo+Messi&first='+str(309)+'&count='+str(28)
 #url = 'http://image.baidu.com/search/index?tn=baiduimage&word=george%20clooney&pn=1'
-#url = 'http://anonymouse.org/cgi-bin/anon-www.cgi/http://www.bing.com/images/search?q=leo+messi&first=1&count=28'
-#header = {'User-Agent': 'Mozilla/5.0'} 
-#data = get_html(url, header)
-#print data
+#url = 'https://it.images.search.yahoo.com/search/images?p=a.j.buckley'
+#url = 'https://duckduckgo.com/i.js?q=a.j.+buckley'
+url = 'http://fresh-proxy.appspot.com/images.search.yahoo.com/search/images?p=leo+messi&b=100'
+header = {'User-Agent': 'Mozilla/5.0'} 
+data = get_html(url, header)
+print data
