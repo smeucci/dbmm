@@ -131,7 +131,7 @@ def save(queue, identity, DATA_DIR):
                         '+' + image.engine + '+' + str(image.rank) + '\n'
             paths.write(string)
             paths.close()
-            print 'Saved: ' + image_path
+            #print 'Saved: ' + image_path
     
         update_identity_images(identity, len(images))
         update_identity_status(identity, 'DONE')
@@ -233,7 +233,7 @@ if len(sys.argv) > 1:
     DATA_DIR = sys.argv[3].encode('utf-8')
 else:
     identity = {
-            'name': 'A.J._Buckley',
+            'name': 'Leo_Messi',
             'label': 'n00000001-test'
     }
     DATA_DIR='/media/saverio/DATA/'

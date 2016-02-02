@@ -293,7 +293,7 @@ else:
 #url = 'http://image.baidu.com/search/index?tn=baiduimage&word=george%20clooney&pn=1'
 #url = 'https://it.images.search.yahoo.com/search/images?p=a.j.buckley'
 #url = 'https://duckduckgo.com/i.js?q=a.j.+buckley'
-url = 'http://fresh-proxy.appspot.com/images.search.yahoo.com/search/images?p=leo+messi&b=100'
+url = 'http://www.freebase.com/celebrities/celebrity?instances='
 header = {'User-Agent': 'Mozilla/5.0'} 
 data = get_html(url, header)
 print data

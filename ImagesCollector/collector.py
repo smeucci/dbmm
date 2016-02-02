@@ -63,11 +63,13 @@ def search(identity, num_of_imgs):
     #start threads
     threads = []
     bing_search = Thread(target=fetcher, args=(queue, 'bing', data))
-    aol_search = Thread(target=fetcher, args=(queue, 'aol', data))
+    aol_search_1 = Thread(target=fetcher, args=(queue, 'aol1', data))
+    aol_search_2 = Thread(target=fetcher, args=(queue, 'aol2', data))
     #duck_search = Thread(target=fetcher, args=(queue, 'duck', data))
     yahoo_search = Thread(target=fetcher, args=(queue, 'yahoo', data))
     threads.append(bing_search)
-    threads.append(aol_search)
+    threads.append(aol_search_1)
+    threads.append(aol_search_2)
     #threads.append(duck_search)
     threads.append(yahoo_search)
     
@@ -92,7 +94,8 @@ def search(identity, num_of_imgs):
 def fetcher(queue, search_engine, data):
     switcher =  {
             'bing': fetcher_bing,
-            'aol': fetcher_aol,
+            'aol1': fetcher_aol_1,
+            'aol2': fetcher_aol_2,
             'duck': fetcher_duck,
             'yahoo': fetcher_yahoo
     }
@@ -102,11 +105,8 @@ def fetcher(queue, search_engine, data):
 
 #fetcher the images for a given query from bing
 def fetcher_bing(queue, search_engine, data):
-    
     #the proxy to use
-    proxy = 'http://anonymouse.org'
-    proxy_conc = '/cgi-bin/anon-www.cgi/'
-    proxy_url = proxy + proxy_conc
+    proxy_url = 'http://anonymouse.org/cgi-bin/anon-www.cgi/'
     
     first, count = 1, 28
     rounds = int(math.ceil((data['num_of_imgs']) / count)) + 1
@@ -134,18 +134,16 @@ def fetcher_bing(queue, search_engine, data):
         first = (count*(rnd + 1)) + 1
     
     
-#fetcher the images for a given query from baidu
-def fetcher_aol(queue, search_engine, data):
+#fetcher the images for a given query from aol, first half
+def fetcher_aol_1(queue, search_engine, data):
     #the proxy to use
-    proxy = 'http://anonymouse.org'
-    proxy_conc = '/cgi-bin/anon-www.cgi/'
-    proxy_url = proxy + proxy_conc
+    proxy_url = 'http://anonymouse.org/cgi-bin/anon-www.cgi/'
     
     count = 20
     rounds = int(math.ceil((data['num_of_imgs']) / count)) + 1
+    second_half = int(math.ceil(rounds / 2))
     
-    
-    for rnd in range(0, rounds):
+    for rnd in range(0, second_half):
         #create the query url       
         url = 'http://search.aol.com/aol/image?q='+data['query']+'&page='+str(rnd+1)
                             
@@ -156,19 +154,45 @@ def fetcher_aol(queue, search_engine, data):
         info = {
             'count': count,
             'round': rnd,
-            'proxy': proxy_conc,
+            'proxy': proxy_url,
             'query': data['query'],
             'label': data['label'],
-            'engine': search_engine
+            'engine': 'aol'
+        }
+        parser(html, info, queue)
+        
+
+#fetcher the images for a given query from aol, second half
+def fetcher_aol_2(queue, search_engine, data):
+    #the proxy to use
+    proxy_url = 'http://anonymouse.org/cgi-bin/anon-www.cgi/'
+    
+    count = 20
+    rounds = int(math.ceil((data['num_of_imgs']) / count)) + 1
+    second_half = int(math.ceil(rounds / 2))
+    
+    for rnd in range(second_half, rounds):
+        #create the query url       
+        url = 'http://search.aol.com/aol/image?q='+data['query']+'&page='+str(rnd+1)
+                            
+        #get html page for the query    
+        html = get_html(proxy_url + url.encode('utf-8'), data['header'])
+        
+        #retrieve the imgurls for the query by parsing the html page
+        info = {
+            'count': count,
+            'round': rnd,
+            'proxy': proxy_url,
+            'query': data['query'],
+            'label': data['label'],
+            'engine': 'aol'
         }
         parser(html, info, queue)
 
 
 def fetcher_duck(queue, search_engine, data):
     #the proxy to use
-    proxy = 'http://fresh-proxy.appspot.com/'
-    proxy_conc = ''
-    proxy_url = proxy + proxy_conc
+    proxy_url = 'http://fresh-proxy.appspot.com/'
     
     count = 35
     rounds = int(math.ceil((data['num_of_imgs']) / count)) + 1
@@ -185,7 +209,7 @@ def fetcher_duck(queue, search_engine, data):
         info = {
             'count': count,
             'round': rnd,
-            'proxy': proxy_conc,
+            'proxy': proxy_url,
             'query': data['query'],
             'label': data['label'],
             'engine': search_engine
@@ -195,9 +219,7 @@ def fetcher_duck(queue, search_engine, data):
     
 def fetcher_yahoo(queue, search_engine, data):
     #the proxy to use
-    proxy = 'http://fresh-proxy.appspot.com/'
-    proxy_conc = ''
-    proxy_url = proxy + proxy_conc
+    proxy_url = 'http://fresh-proxy.appspot.com/'
     
     first, count = 1, 40
     rounds = int(math.ceil((data['num_of_imgs']) / count)) + 1
@@ -205,7 +227,7 @@ def fetcher_yahoo(queue, search_engine, data):
     for rnd in range(0, rounds):
         
         #create the query url       
-        url = 'images.search.yahoo.com/search/images?p=leo+messi&b='+str(first)
+        url = 'images.search.yahoo.com/search/images?p='+data['query']+'&b='+str(first)
                             
         #get html page for the query    
         html = get_html(proxy_url + url.encode('utf-8'), data['header'])
@@ -329,7 +351,7 @@ def parser_yahoo(html, info, queue):
             #inizialize object of class Image
             img = Image()
             #parse the url
-            url = imgurl.replace("'\'", "")
+            url = imgurl.replace('\/', '/')
             #compute the rank of the image
             img_rank = queue.qsize()
             #build a unique id for the image
@@ -464,10 +486,10 @@ if len(sys.argv) > 1:
     num_of_imgs = int(sys.argv[3])
 else:
     identity = {
-            'name': 'A.J._Buckley',
+            'name': 'Leo_Messi',
             'label': 'n00000001-test'
     }
-    num_of_imgs = 50
+    num_of_imgs = 500
         
 
 insert_identity(identity)
