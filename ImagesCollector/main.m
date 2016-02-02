@@ -9,7 +9,7 @@ start_time = clock;
 data_path = '/media/saverio/DATA/';
 collect = false;
 download = false;
-detect = true;
+detect = false;
 num_to_collect = 10;
 
 %load list of identities

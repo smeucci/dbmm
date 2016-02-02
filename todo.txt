@@ -26,13 +26,14 @@ PRIORITA':
 - FATTO - salvare su db url di immagini
 - FATTO - script che prende solo gli url e li salva su db, il resto dopo
 - FATTO - implementare proxy
-- fare fetcher e parser per altri se
+- FATTO - fare fetcher e parser per altri se
 - FATTO - implementare downloader: prende url da db, scarica e li salva su disco con multithreading
 - QS - fare in modo che un crash non porti a perdita di dati già acquisiti (immagini, file dei path etc) e che si possa ripristinare il download da l'ultima query effettuata
-- implementare parpool su matlab per collector e downloader
+- SOLO Downloader - implementare parpool su matlab per collector e downloader
 - QS - sistemare salvataggio nella cartella crop
 - FATTO - sistemare come prendo la differenza di liste
-- sistemare url yahoo
+- FATTO - sistemare url yahoo
+- implementare controllo su numero di href (es. < 7 problema)
 
 FUNZIONAMENTO:
 - data una lista di identità, devo recuperare le immagini relative e cropparle per cnn:

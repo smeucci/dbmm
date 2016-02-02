@@ -376,7 +376,7 @@ def get_html(url, header):
 
 #insert a new identity in the db
 def insert_identity(identity):    
-    db = MySQLdb.connect('127.0.0.1', 'root', 'pwd', 'collector')
+    db = MySQLdb.connect('127.0.0.1', 'root', pwd, 'collector')
     cursor = db.cursor()  
     rollback = False
     try:
@@ -397,7 +397,7 @@ def insert_identity(identity):
     
 #update identity status
 def update_identity_status(identity, status):  
-    db = MySQLdb.connect('127.0.0.1', 'root', 'pwd', 'collector')
+    db = MySQLdb.connect('127.0.0.1', 'root', pwd, 'collector')
     cursor = db.cursor() 
     rollback = False
                       
@@ -419,7 +419,7 @@ def update_identity_status(identity, status):
 
 #update number of urls fetched for an identity
 def update_identity_urls(identity, queue_size):
-    db = MySQLdb.connect('127.0.0.1', 'root', 'pwd', 'collector')
+    db = MySQLdb.connect('127.0.0.1', 'root', pwd, 'collector')
     cursor = db.cursor() 
     rollback = False
                       
@@ -442,7 +442,7 @@ def update_identity_urls(identity, queue_size):
 #save info (url, etc..) of an image to db
 def insert_urls(queue, identity, queue_size):
     print identity['name'] + ' - Saving to db..'
-    db = MySQLdb.connect('127.0.0.1', 'root', 'pwd', 'collector')
+    db = MySQLdb.connect('127.0.0.1', 'root', pwd, 'collector')
     cursor = db.cursor()
     rollback = False
     
@@ -489,9 +489,9 @@ else:
             'name': 'Leo_Messi',
             'label': 'n00000001-test'
     }
-    num_of_imgs = 500
+    num_of_imgs = 10
         
-
+pwd = 'pwd'
 insert_identity(identity)
 print 'Identity: ' + identity['name']
 search(identity, num_of_imgs)

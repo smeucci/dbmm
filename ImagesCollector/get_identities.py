@@ -10,7 +10,7 @@ import os
 
 
 def get_identities(status, DATA_DIR):
-    db = MySQLdb.connect('127.0.0.1', 'root', 'pwd', 'collector')
+    db = MySQLdb.connect('127.0.0.1', 'root', pwd, 'collector')
     cursor = db.cursor()  
     
     identities_path = DATA_DIR + 'data/identities.txt'
@@ -61,7 +61,7 @@ else:
     status = 'OK'
     DATA_DIR='/media/saverio/DATA/'
 
-
+pwd = 'pwd'
 get_identities(status, DATA_DIR)    
     
         

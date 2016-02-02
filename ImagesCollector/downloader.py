@@ -143,7 +143,7 @@ def save(queue, identity, DATA_DIR):
 
 #select urls from db for a given identity, returns a list of object of class Image
 def select_urls(identity):
-    db = MySQLdb.connect('127.0.0.1', 'root', 'pwd', 'collector')
+    db = MySQLdb.connect('127.0.0.1', 'root', pwd, 'collector')
     cursor = db.cursor()  
     rollback = False
     images = []
@@ -177,7 +177,7 @@ def select_urls(identity):
      
 #update number of images downloaded for an identity
 def update_identity_images(identity, queue_size):
-    db = MySQLdb.connect('127.0.0.1', 'root', 'pwd', 'collector')
+    db = MySQLdb.connect('127.0.0.1', 'root', pwd, 'collector')
     cursor = db.cursor() 
     rollback = False
                       
@@ -199,7 +199,7 @@ def update_identity_images(identity, queue_size):
 
 #update status for an identity
 def update_identity_status(identity, status):
-    db = MySQLdb.connect('127.0.0.1', 'root', 'pwd', 'collector')
+    db = MySQLdb.connect('127.0.0.1', 'root', pwd, 'collector')
     cursor = db.cursor() 
     rollback = False
                       
@@ -238,7 +238,7 @@ else:
     }
     DATA_DIR='/media/saverio/DATA/'
 
-
+pwd = 'pwd'
 downloader(identity, DATA_DIR)    
    
     
