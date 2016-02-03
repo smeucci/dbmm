@@ -34,6 +34,7 @@ PRIORITA':
 - FATTO - sistemare come prendo la differenza di liste
 - FATTO - sistemare url yahoo
 - implementare controllo su numero di href (es. < 7 problema)
+- creare lista di identità come subset dei 2622
 
 FUNZIONAMENTO:
 - data una lista di identità, devo recuperare le immagini relative e cropparle per cnn:

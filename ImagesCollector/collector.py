@@ -110,28 +110,29 @@ def fetcher_bing(queue, search_engine, data):
     
     first, count = 1, 28
     rounds = int(math.ceil((data['num_of_imgs']) / count)) + 1
-    
+    num = 1000 #needs to be bigger than count
     for rnd in range(0, rounds):
-        
-        #create the query url       
-        url = 'http://www.bing.com/images/search?q='+data['query']+'&first='+str(first)+'&count='+str(count)
-                            
-        #get html page for the query    
-        html = get_html(proxy_url + url.encode('utf-8'), data['header'])
-        
-        #retrieve the imgurls for the query by parsing the html page
-        info = {
-            'first': first,
-            'count': count,
-            'round': rnd,
-            'proxy': proxy_url,
-            'query': data['query'],
-            'label': data['label'],
-            'engine': search_engine
-        }
-        parser(html, info, queue)
-                    
-        first = (count*(rnd + 1)) + 1
+        #check if imgurls returned in previous iteration are not too low; that means angry search engine
+        if (num > 10):
+            #create the query url       
+            url = 'http://www.bing.com/images/search?q='+data['query']+'&first='+str(first)+'&count='+str(count)
+                                
+            #get html page for the query    
+            html = get_html(proxy_url + url.encode('utf-8'), data['header'])
+            
+            #retrieve the imgurls for the query by parsing the html page
+            info = {
+                'first': first,
+                'count': count,
+                'round': rnd,
+                'proxy': proxy_url,
+                'query': data['query'],
+                'label': data['label'],
+                'engine': search_engine
+            }
+            num = parser(html, info, queue)
+                        
+            first = (count*(rnd + 1)) + 1
     
     
 #fetcher the images for a given query from aol, first half
@@ -142,24 +143,26 @@ def fetcher_aol_1(queue, search_engine, data):
     count = 20
     rounds = int(math.ceil((data['num_of_imgs']) / count)) + 1
     second_half = int(math.ceil(rounds / 2))
-    
+    num = 1000 #needs to be bigger than count
     for rnd in range(0, second_half):
-        #create the query url       
-        url = 'http://search.aol.com/aol/image?q='+data['query']+'&page='+str(rnd+1)
-                            
-        #get html page for the query    
-        html = get_html(proxy_url + url.encode('utf-8'), data['header'])
-        
-        #retrieve the imgurls for the query by parsing the html page
-        info = {
-            'count': count,
-            'round': rnd,
-            'proxy': proxy_url,
-            'query': data['query'],
-            'label': data['label'],
-            'engine': 'aol'
-        }
-        parser(html, info, queue)
+        #check if imgurls returned in previous iteration are not too low; that means angry search engine
+        if (num > 10):
+            #create the query url       
+            url = 'http://search.aol.com/aol/image?q='+data['query']+'&page='+str(rnd+1)
+                                
+            #get html page for the query    
+            html = get_html(proxy_url + url.encode('utf-8'), data['header'])
+            
+            #retrieve the imgurls for the query by parsing the html page
+            info = {
+                'count': count,
+                'round': rnd,
+                'proxy': proxy_url,
+                'query': data['query'],
+                'label': data['label'],
+                'engine': 'aol'
+            }
+            num = parser(html, info, queue)
         
 
 #fetcher the images for a given query from aol, second half
@@ -170,24 +173,26 @@ def fetcher_aol_2(queue, search_engine, data):
     count = 20
     rounds = int(math.ceil((data['num_of_imgs']) / count)) + 1
     second_half = int(math.ceil(rounds / 2))
-    
+    num = 1000 #needs to be bigger than count
     for rnd in range(second_half, rounds):
-        #create the query url       
-        url = 'http://search.aol.com/aol/image?q='+data['query']+'&page='+str(rnd+1)
-                            
-        #get html page for the query    
-        html = get_html(proxy_url + url.encode('utf-8'), data['header'])
-        
-        #retrieve the imgurls for the query by parsing the html page
-        info = {
-            'count': count,
-            'round': rnd,
-            'proxy': proxy_url,
-            'query': data['query'],
-            'label': data['label'],
-            'engine': 'aol'
-        }
-        parser(html, info, queue)
+        #check if imgurls returned in previous iteration are not too low; that means angry search engine
+        if (num > 10):
+            #create the query url       
+            url = 'http://search.aol.com/aol/image?q='+data['query']+'&page='+str(rnd+1)
+                                
+            #get html page for the query    
+            html = get_html(proxy_url + url.encode('utf-8'), data['header'])
+            
+            #retrieve the imgurls for the query by parsing the html page
+            info = {
+                'count': count,
+                'round': rnd,
+                'proxy': proxy_url,
+                'query': data['query'],
+                'label': data['label'],
+                'engine': 'aol'
+            }
+            num = parser(html, info, queue)
 
 
 def fetcher_duck(queue, search_engine, data):
@@ -197,24 +202,26 @@ def fetcher_duck(queue, search_engine, data):
     count = 35
     rounds = int(math.ceil((data['num_of_imgs']) / count)) + 1
     
-    
+    num = 1000 #needs to be bigger than count
     for rnd in range(0, rounds):
-        #create the query url       
-        url = proxy_url + 'duckduckgo.com/i.js?q='+data['query']+'&s='+str(rnd)
-                            
-        #get html page for the query    
-        html = get_html(url.encode('utf-8'), data['header'])
-        
-        #retrieve the imgurls for the query by parsing the html page
-        info = {
-            'count': count,
-            'round': rnd,
-            'proxy': proxy_url,
-            'query': data['query'],
-            'label': data['label'],
-            'engine': search_engine
-        }
-        parser(html, info, queue)
+        #check if imgurls returned in previous iteration are not too low; that means angry search engine
+        if (num > 10):
+            #create the query url       
+            url = proxy_url + 'duckduckgo.com/i.js?q='+data['query']+'&s='+str(rnd)
+                                
+            #get html page for the query    
+            html = get_html(url.encode('utf-8'), data['header'])
+            
+            #retrieve the imgurls for the query by parsing the html page
+            info = {
+                'count': count,
+                'round': rnd,
+                'proxy': proxy_url,
+                'query': data['query'],
+                'label': data['label'],
+                'engine': search_engine
+            }
+            num = parser(html, info, queue)
 
     
 def fetcher_yahoo(queue, search_engine, data):
@@ -223,28 +230,29 @@ def fetcher_yahoo(queue, search_engine, data):
     
     first, count = 1, 40
     rounds = int(math.ceil((data['num_of_imgs']) / count)) + 1
-    
+    num = 1000 #needs to be bigger than count
     for rnd in range(0, rounds):
-        
-        #create the query url       
-        url = 'images.search.yahoo.com/search/images?p='+data['query']+'&b='+str(first)
-                            
-        #get html page for the query    
-        html = get_html(proxy_url + url.encode('utf-8'), data['header'])
-        
-        #retrieve the imgurls for the query by parsing the html page
-        info = {
-            'first': first,
-            'count': count,
-            'round': rnd,
-            'proxy': proxy_url,
-            'query': data['query'],
-            'label': data['label'],
-            'engine': search_engine
-        }
-        parser(html, info, queue)
-                    
-        first = (count*(rnd + 1)) + 1
+        #check if imgurls returned in previous iteration are not too low; that means angry search engine
+        if (num > 10):
+            #create the query url       
+            url = 'images.search.yahoo.com/search/images?p='+data['query']+'&b='+str(first)
+                                
+            #get html page for the query    
+            html = get_html(proxy_url + url.encode('utf-8'), data['header'])
+            
+            #retrieve the imgurls for the query by parsing the html page
+            info = {
+                'first': first,
+                'count': count,
+                'round': rnd,
+                'proxy': proxy_url,
+                'query': data['query'],
+                'label': data['label'],
+                'engine': search_engine
+            }
+            num = parser(html, info, queue)
+                        
+            first = (count*(rnd + 1)) + 1
     
 
 #PARSER: select the parser based on the search engine to use
@@ -286,7 +294,7 @@ def parser_bing(html, info, queue):
     
     print info['query'].replace('+', '_') + ' - Number of fetched urls by bing: ' + str(queue.qsize()) + \
                                              ' - num: ' + str(num)
-
+    return num
 
 #parse the data from a html response from baidu
 def parser_aol(html, info, queue):
@@ -313,6 +321,7 @@ def parser_aol(html, info, queue):
                 
     print info['query'].replace('+', '_') + ' - Number of fetched urls by aol: ' + str(queue.qsize()) + \
                                              ' - num: ' + str(num)
+    return num
 
 def parser_duck(html, info, queue):
     rank = (info['count'] * info['round']) + 1
@@ -340,7 +349,9 @@ def parser_duck(html, info, queue):
                 
     print info['query'].replace('+', '_') + ' - Number of fetched urls by duckduckgo: ' + str(queue.qsize()) + \
                                              ' - num: ' + str(num)
-                                             
+    return num              
+        
+                                  
 def parser_yahoo(html, info, queue):
     rank = (info['count'] * info['round']) + 1
     num = 0
@@ -366,7 +377,9 @@ def parser_yahoo(html, info, queue):
             
     print info['query'].replace('+', '_') + ' - Number of fetched urls by yahoo: ' + str(queue.qsize()) + \
                                              ' - num: ' + str(num)
+    return num
 
+     
 #get the html page for a given url
 def get_html(url, header):
     return BeautifulSoup(urllib2.urlopen(urllib2.Request(url, headers=header)))
