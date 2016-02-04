@@ -81,8 +81,8 @@ if detect == true
     dataset = cell(size(classes.description, 1), 1);
     
     %start the parallel pool
-    gcp();
-    parfor idx = 1:4%size(classes.name, 2)
+    %gcp();
+    for idx = 1:1%size(classes.name, 2)
         identity = classes.description{idx, 1};
         label = classes.name{1, idx};
         file_path = [data_path, 'img/', label, '_', identity, '/', label, '_paths.txt'];
@@ -96,7 +96,7 @@ if detect == true
                 
     end
     %shutdown parallel pool
-    delete(gcp)
+    %delete(gcp)
     
 end
 

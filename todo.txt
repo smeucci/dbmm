@@ -28,13 +28,19 @@ PRIORITA':
 - FATTO - implementare proxy
 - FATTO - fare fetcher e parser per altri se
 - FATTO - implementare downloader: prende url da db, scarica e li salva su disco con multithreading
-- QS - fare in modo che un crash non porti a perdita di dati già acquisiti (immagini, file dei path etc) e che si possa ripristinare il download da l'ultima query effettuata
+- FATTO - fare in modo che un crash non porti a perdita di dati già acquisiti (immagini, file dei path etc) e che si possa ripristinare il download da l'ultima query effettuata
 - SOLO Downloader - implementare parpool su matlab per collector e downloader
-- QS - sistemare salvataggio nella cartella crop
+- FATTO - sistemare salvataggio nella cartella crop
 - FATTO - sistemare come prendo la differenza di liste
 - FATTO - sistemare url yahoo
-- implementare controllo su numero di href (es. < 7 problema)
-- creare lista di identità come subset dei 2622
+- FATTO - implementare controllo su numero di href (es. < 7 problema)
+- FATTO - creare lista di identità come subset dei 2622
+- gestire eccezione in face detection matlab, invalid input
+
+ESECUZIONE:
+- fetch and downloaded primi 100 con check su num
+- lanciare script per crop di questi 100
+- i prossimi 100 provare fetch senza check su numZ (no), semmai mettere pausa tra un'identità e l'altra
 
 FUNZIONAMENTO:
 - data una lista di identità, devo recuperare le immagini relative e cropparle per cnn:

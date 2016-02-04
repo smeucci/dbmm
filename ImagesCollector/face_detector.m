@@ -21,7 +21,7 @@ function face_detector(dataset, faceDet, data_path)
                 for j = 1:size(det, 2)
 
                     %check if detection confidence is above a threshold
-                    if det(6, j) >= 2     
+                    if det(6, j) >= 1.8
 
                         %crop the image and save to disk
                         diff = [-100, -100, 100, 100]; %for bigger crop

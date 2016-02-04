@@ -64,9 +64,10 @@ def downloader(identity, DATA_DIR):
     
 
 #start the threads
-def download_master(images, queue):
+def download_master(images, queue, identity):
     threads = []
     if images:
+        print identity['name'] + ' - Downloading..'
         for image in images:
             t = Thread(target=download_slave, args=(queue, image))
             threads.append(t)
@@ -93,7 +94,7 @@ def download_slave(queue, image):
         if len(raw) >= 50000:
             image.set_raw(raw)
             queue.put(image)
-            print image.identity + ' - Downloaded from: ' + image.url + ' - engine: ' + str(image.engine)    
+            #print image.identity + ' - Downloaded from: ' + image.url + ' - engine: ' + str(image.engine)    
     
 
 def save(queue, identity, DATA_DIR):
@@ -174,7 +175,7 @@ def select_urls(identity):
         return None
     elif rollback == False:
         return images
-     
+    
 #update number of images downloaded for an identity
 def update_identity_images(identity, queue_size):
     db = MySQLdb.connect('127.0.0.1', 'root', pwd, 'collector')
