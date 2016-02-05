@@ -36,6 +36,8 @@ PRIORITA':
 - FATTO - implementare controllo su numero di href (es. < 7 problema)
 - FATTO - creare lista di identità come subset dei 2622
 - gestire eccezione in face detection matlab, invalid input
+- usare dlib per face detection in locale, imparare ad usarlo e verificare performance
+- FATTO - fare in modo che i file vengano salvati secondo il loro corretto formato.
 
 ESECUZIONE:
 - fetch and downloaded primi 100 con check su num

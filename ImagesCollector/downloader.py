@@ -3,6 +3,7 @@ import urllib2
 import Queue
 import MySQLdb
 import os
+import string as String
 from time import time as timer
 from threading import Thread
 
@@ -49,7 +50,7 @@ def downloader(identity, DATA_DIR):
     
     #start multithreading
     queue = Queue.Queue(maxsize=0)
-    download_master(images, queue)
+    download_master(images, queue, identity)
         
     #if queue is not empty, save images to disk (status = DONE), else end script (STATUS = ERR_D)
     if not queue.empty():
@@ -122,7 +123,8 @@ def save(queue, identity, DATA_DIR):
             if not os.path.exists(images_dir):
                 os.makedirs(images_dir)
             #save image
-            image_path = images_dir + str(image.rank) + '.jpg'
+            ext = String.split(image.url, '.')
+            image_path = images_dir + str(image.rank) + '.' + ext[-1]
             f = open(image_path, 'wb')
             f.write(image.raw)
             f.close()
