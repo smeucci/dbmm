@@ -73,6 +73,7 @@ if download == true
     end
 end
 
+%detect and crop the images donwloaded for each identity
 if detect == true
    imgcrop_folder = [data_path, 'imgcrop/'];
    if ~exist(imgcrop_folder, 'dir')
