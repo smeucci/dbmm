@@ -1,5 +1,5 @@
 
-clear all;
+%clear all;
 clc;
 
 %start timer
@@ -9,7 +9,8 @@ start_time = clock;
 data_path = '/media/saverio/DATA/';
 collect = false;
 download = false;
-detect = false;
+detect = true;
+detect_old = false;
 num_to_collect = 10;
 
 %load list of identities
@@ -72,32 +73,58 @@ if download == true
     end
 end
 
-%detect faces and crop images
 if detect == true
-    %load the face model and inizialize the face detector
-    face_model_path = [data_path, 'data/face_model.mat'];
-    faceDet = lib.face_detector.dpmCascadeDetector(face_model_path);
-
-    dataset = cell(size(classes.description, 1), 1);
-    
-    %start the parallel pool
-    %gcp();
-    for idx = 1:1%size(classes.name, 2)
-        identity = classes.description{idx, 1};
-        label = classes.name{1, idx};
-        file_path = [data_path, 'img/', label, '_', identity, '/', label, '_paths.txt'];
-        if exist(file_path, 'file')
-            [images, labels, names, engines, ranks] = textread(file_path, '%s %s %s %s %s', 'delimiter', '+');
-            tmp = cat(2, images, labels, names, engines, ranks);
-            dataset{idx, 1} = tmp;
-            
-            face_detector(dataset{idx, 1}, faceDet, data_path)
-        end
-                
-    end
-    %shutdown parallel pool
-    %delete(gcp)
-    
+   imgcrop_folder = [data_path, 'imgcrop/'];
+   if ~exist(imgcrop_folder, 'dir')
+       mkdir(imgcrop_folder);
+   end
+   
+   for idx = 1:1%size(classes.description)
+       identity = classes.description{idx, 1};
+       label = classes.name{1, idx};
+      
+       identitycrop_folder = [imgcrop_folder,  label, '_', identity, '/'];
+       if ~exist(identitycrop_folder, 'dir')
+           mkdir(identitycrop_folder);
+       end
+       
+       search_engine = {'aol', 'bing', 'yahoo'};
+       for se = 1:1%size(search_engine, 2)
+           enginecrop_folder = [identitycrop_folder, search_engine{1, se}, '/'];
+           if ~exist(enginecrop_folder, 'dir')
+               mkdir(enginecrop_folder);
+           end
+           fprintf('Detect and crop identity: %s - %s..', identity, search_engine{1, se});
+           cmd = ['./face_detector ', strrep(enginecrop_folder, 'imgcrop', 'img'), '*'];
+           
+           [status, cmdout] = system(cmd);
+           fprintf('\n - Elapsed time: %.2f s\n', etime(clock, start_time));
+           imgout = strsplit(cmdout, ';');
+           
+           for i = 1:size(imgout, 2)             
+                output = strsplit(imgout{1, i}, ',');
+                for j = 1:size(output, 2)-1
+                    box = strsplit(output{1, j}, '+');
+                    det = zeros(4, 1);
+                    for h = 1:size(det, 1)
+                       det(h, 1) = str2num(box{1, h+1}); 
+                    end
+                    %crop and save
+                    warning off MATLAB:colon:nonIntegerIndex;
+                    im = imread(strrep(strtrim(box{1,1}), ' ', ''));
+                    %for bigger crop
+                    %diff = [-det(1)/2, -det(2)/2, det(3)/2, det(4)/2];
+                    diff = [0,0,0,0];
+                    crop = lib.face_proc.faceCrop.crop(im, det+diff');
+                    impath = strrep(box{1,1}, 'img', 'imgcrop');
+                    impath = strrep(impath, '.jpg', '');
+                    imwrite(crop, strtrim([impath, '-', num2str(j), '.jpg']));
+                end
+                     
+           end
+       end     
+   end    
 end
+
 
 fprintf('\n - Elapsed time: %.2f s\n', etime(clock, start_time));

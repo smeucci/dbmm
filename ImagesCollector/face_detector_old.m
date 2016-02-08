@@ -1,4 +1,4 @@
-function face_detector(dataset, faceDet, data_path)
+function face_detector_old(dataset, faceDet, data_path)
     
     warning off;
     resize = 800; %resizing base on image height

@@ -123,8 +123,7 @@ def save(queue, identity, DATA_DIR):
             if not os.path.exists(images_dir):
                 os.makedirs(images_dir)
             #save image
-            ext = String.split(image.url, '.')
-            image_path = images_dir + str(image.rank) + '.' + ext[-1]
+            image_path = images_dir + str(image.rank) + '.jpg'
             f = open(image_path, 'wb')
             f.write(image.raw)
             f.close()

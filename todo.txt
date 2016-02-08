@@ -35,9 +35,11 @@ PRIORITA':
 - FATTO - sistemare url yahoo
 - FATTO - implementare controllo su numero di href (es. < 7 problema)
 - FATTO - creare lista di identità come subset dei 2622
-- gestire eccezione in face detection matlab, invalid input
-- usare dlib per face detection in locale, imparare ad usarlo e verificare performance
+- FATTO - gestire eccezione in face detection matlab, invalid input; implementato con dlib
+- FATTO - usare dlib per face detection in locale, imparare ad usarlo e verificare performance
 - FATTO - fare in modo che i file vengano salvati secondo il loro corretto formato.
+- trovare il modo migliore per croppare l'immagine date le coord di box
+- mettere gcp
 
 ESECUZIONE:
 - fetch and downloaded primi 100 con check su num
