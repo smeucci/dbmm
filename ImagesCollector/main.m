@@ -10,7 +10,6 @@ data_path = '/media/saverio/DATA/';
 collect = false;
 download = false;
 detect = true;
-detect_old = false;
 num_to_collect = 10;
 
 %load list of identities
@@ -79,8 +78,9 @@ if detect == true
    if ~exist(imgcrop_folder, 'dir')
        mkdir(imgcrop_folder);
    end
-   
-   for idx = 1:1%size(classes.description)
+   %start parallel pool
+   gcp();
+   parfor idx = 1:4%size(classes.description)
        identity = classes.description{idx, 1};
        label = classes.name{1, idx};
       
@@ -90,7 +90,7 @@ if detect == true
        end
        
        search_engine = {'aol', 'bing', 'yahoo'};
-       for se = 1:1%size(search_engine, 2)
+       for se = 1:size(search_engine, 2)
            enginecrop_folder = [identitycrop_folder, search_engine{1, se}, '/'];
            if ~exist(enginecrop_folder, 'dir')
                mkdir(enginecrop_folder);
@@ -102,7 +102,7 @@ if detect == true
            fprintf('\n - Elapsed time: %.2f s\n', etime(clock, start_time));
            imgout = strsplit(cmdout, ';');
            
-           for i = 1:size(imgout, 2)             
+           for i = 1:size(imgout, 2)-1            
                 output = strsplit(imgout{1, i}, ',');
                 for j = 1:size(output, 2)-1
                     box = strsplit(output{1, j}, '+');
@@ -112,19 +112,31 @@ if detect == true
                     end
                     %crop and save
                     warning off MATLAB:colon:nonIntegerIndex;
-                    im = imread(strrep(strtrim(box{1,1}), ' ', ''));
-                    %for bigger crop
-                    %diff = [-det(1)/2, -det(2)/2, det(3)/2, det(4)/2];
-                    diff = [0,0,0,0];
-                    crop = lib.face_proc.faceCrop.crop(im, det+diff');
-                    impath = strrep(box{1,1}, 'img', 'imgcrop');
-                    impath = strrep(impath, '.jpg', '');
-                    imwrite(crop, strtrim([impath, '-', num2str(j), '.jpg']));
+                    expr = 'Premature(\w+)file';
+                    path = strrep(box{1,1}, ' ', '');
+                    path = regexprep(path, expr, '');
+                    path = strtrim(path);
+                    try
+                        im = imread(strtrim(box{1,1}));
+                        %for bigger crop
+                        w = det(3)-det(1);
+                        h = det(4)-det(2);
+                        scale = h/2;
+                        diff = [-scale, -scale, scale, scale];
+                        crop = lib.face_proc.faceCrop.crop(im, det+diff');
+                        impath = strrep(box{1,1}, 'img', 'imgcrop');
+                        impath = strrep(impath, '.jpg', '');
+                        imwrite(crop, strtrim([impath, '-', num2str(j), '.jpg']));
+                    catch
+                        fprintf('Error %s\n', path);
+                    end
                 end
                      
            end
        end     
-   end    
+   end
+   %delete parallel pool
+   delete(gcp);
 end
 
 

@@ -40,6 +40,8 @@ PRIORITA':
 - FATTO - fare in modo che i file vengano salvati secondo il loro corretto formato.
 - trovare il modo migliore per croppare l'immagine date le coord di box
 - mettere gcp
+- stampare fine detect e crop identity+se
+- studiare net di vgg, guardare laboratorio 3, matconvnet
 
 ESECUZIONE:
 - fetch and downloaded primi 100 con check su num
