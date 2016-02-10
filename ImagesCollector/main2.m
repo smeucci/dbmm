@@ -1,5 +1,5 @@
 
-%clear all;
+clear;
 clc;
 
 %start timer
@@ -80,7 +80,7 @@ if detect == true
    end
    %start parallel pool
    gcp();
-   parfor idx = 1:1%size(classes.description)
+   parfor idx = 1:4%size(classes.description)
        identity = classes.description{idx, 1};
        label = classes.name{1, idx};
       
@@ -95,50 +95,42 @@ if detect == true
            if ~exist(enginecrop_folder, 'dir')
                mkdir(enginecrop_folder);
            end
+       end
        
-           fprintf('Detect and crop identity: %s - %s..', identity, search_engine{1, se});
-           cmd = ['./face_detector ', strrep(enginecrop_folder, 'imgcrop', 'img'), '*'];
-           
-           [status, cmdout] = system(cmd);
-           fprintf('\n - Elapsed time: %.2f s\n', etime(clock, start_time));
-           imgout = strsplit(cmdout, ';');
-           
-           for i = 1:size(imgout, 2)-1            
-                output = strsplit(imgout{1, i}, ',');
-                for j = 1:size(output, 2)-1
-                    box = strsplit(output{1, j}, '+');
-                    det = zeros(4, 1);
-                    for h = 1:size(det, 1)
-                       det(h, 1) = str2num(box{1, h+1}); 
-                    end
-                    %crop and save
-                    warning off MATLAB:colon:nonIntegerIndex;
-                    %expr = 'Premature(\w+)file';
-                    path = strrep(box{1,1}, ' ', '');
-                    %path = regexprep(path, expr, '');
-                    path = strtrim(path);
-                    try
-                        im = imread(strtrim(box{1,1}));
-                        %for bigger crop
-                        w = det(3)-det(1);
-                        h = det(4)-det(2);
-                        scale = h/2;
-                        diff = [-scale, -scale, scale, scale];
-                        crop = lib.face_proc.faceCrop.crop(im, det+diff');
-                        impath = strrep(box{1,1}, 'img', 'imgcrop');
-                        impath = strrep(impath, '.jpg', '');
-                        imwrite(crop, strtrim([impath, '-', num2str(j), '.jpg']));
-                    catch
-                        fprintf('Error %s\n', path);
-                    end
-                end
-                     
+       fprintf('Detect and crop identity: %s..', identity);
+       cmd = ['./face_detector_new ', strrep(identitycrop_folder, 'imgcrop', 'img'), '*/*.jpg'];
+
+       [status, cmdout] = system(cmd);
+       fprintf('\n %s - Elapsed time: %.2f s\n', identity, etime(clock, start_time));
+
+       output = strsplit(cmdout, ',');
+       for i = 1:size(output, 2)-1
+           box = strsplit(output{1,i}, '+');
+           det = zeros(4, 1);
+           for h = 1:size(det, 1)
+              det(h, 1) = str2num(box{1, h+2}); 
            end
-       end     
+           w = det(3) - det(1);
+           h = det(4) - det(2);
+           w_scale = w/2;
+           h_scale = h/2;
+           diff = [-w_scale, -h_scale, w_scale, h_scale];
+           path = strrep(box{1,2}, ' ', '');
+           path = strtrim(path);
+           im = imread(path);
+           try
+               crop = lib.face_proc.faceCrop.crop(im, det+diff');
+               impath = strrep(box{1,2}, 'img', 'imgcrop');
+               impath = strrep(impath, '.jpg', '');
+               imwrite(crop, strtrim([impath, '-', num2str(str2num(box{1,1})), '.jpg']));
+           catch
+               fprintf('Error %s\n', path);
+           end
+       end
    end
-   %delete parallel pool
    delete(gcp);
 end
+   
 
 
 fprintf('\n - Elapsed time: %.2f s\n', etime(clock, start_time));
