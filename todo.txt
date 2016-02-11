@@ -43,6 +43,11 @@ PRIORITA':
 - stampare fine detect e crop identity+se
 - studiare net di vgg, guardare laboratorio 3, matconvnet
 
+- face detection, salva solo le coordinate del bounding box, originale ed allargato, senza salvare nuove immagini, tieni solo l'originale
+- duplicate removal, usando vlad, uso bounding box allargata per togliere i duplicati da un'identità; cluster + selezione migliore.
+- usare la rete come in lab3 face_recognition, usare bounding box originale (stretta), estrarre descrittore fc layer
+- addestrare linear svm e mostrare a gruppi di 50 i risultati della classificazione per identity (rimozione impurità + validazione visuale)
+
 ESECUZIONE:
 - fetch and downloaded primi 100 con check su num
 - lanciare script per crop di questi 100

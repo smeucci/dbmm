@@ -1,5 +1,5 @@
 
-%clear all;
+clear;
 clc;
 
 %start timer
