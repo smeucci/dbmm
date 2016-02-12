@@ -5,17 +5,25 @@ clc;
 %start timer
 start_time = clock;
 
-%load data path and set variables
+%% Load data path and set variables
+%base_path = cd;
 data_path = '/media/saverio/DATA/';
 collect = false;
 download = false;
 detect = true;
 num_to_collect = 10;
+% Indexes for detection
+start_idx = 1;
+end_idx = 4;
 
-%load list of identities
+%% Load list of identities
 load([data_path, 'data/', 'identities.mat']);
 identities_txt = [data_path, 'data/identities.txt'];
-%collect images for list of identities
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Collect images for list of identities %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 if collect == true
     %get list of identities with status = OK
     status = 'OK';
@@ -44,7 +52,10 @@ if collect == true
     end
 end
 
-%download images for list of identities
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Download images for list of identities %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 if download == true
     %get list of identities with status = DONE
     status = 'DONE';
@@ -72,73 +83,70 @@ if download == true
     end
 end
 
-%detect and crop the images donwloaded for each identity
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Detect and crop the images donwloaded for each identity %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 if detect == true
-   imgcrop_folder = [data_path, 'imgcrop/'];
-   if ~exist(imgcrop_folder, 'dir')
-       mkdir(imgcrop_folder);
-   end
+   
+   dataset = cat(2, classes.description, classes.name');
+   
    %start parallel pool
    gcp();
-   parfor idx = 1:1%size(classes.description)
+   
+   fprintf('## Detecting faces from identities %d to %d. ##\n', start_idx, end_idx);
+   parfor idx = start_idx:end_idx%size(dataset, 1)
+       
        identity = classes.description{idx, 1};
        label = classes.name{1, idx};
-      
-       identitycrop_folder = [imgcrop_folder,  label, '_', identity, '/'];
-       if ~exist(identitycrop_folder, 'dir')
-           mkdir(identitycrop_folder);
+       
+       dets = [];
+       index = 1;
+       
+       identity_path = [data_path, 'img/',  label, '_', identity, '/'];
+              
+       cmd = ['./face_detector ', identity_path, '*/*.jpg'];
+       [status, cmdout] = system(cmd);
+       
+       fprintf('- %s - %s - Elapsed time: %.2f s\n', identity, label, etime(clock, start_time));
+       output = strsplit(cmdout, ';');
+       
+       for i = 1:size(output, 2)-1
+           
+           if size(output{1,i}, 2) > 1
+               
+               try          
+                   box = strsplit(output{1, i}, '+');
+                   dets(index).image = strrep(box{1,1}, identity_path, '');
+                   dets(index).identity = identity;
+                   dets(index).label = label;
+                   
+                   coords = struct();
+                   coords.left = str2double(box{1,2});
+                   coords.top = str2double(box{1,3});
+                   coords.right = str2double(box{1,4});
+                   coords.bottom = str2double(box{1,5});
+
+                   dets(index).box = coords;
+
+                   index = index + 1;
+
+               catch
+                   %do nothing
+               end
+                           
+           end
+                     
        end
        
-       search_engine = {'aol', 'bing', 'yahoo'};
-       for se = 1:size(search_engine, 2)
-           enginecrop_folder = [identitycrop_folder, search_engine{1, se}, '/'];
-           if ~exist(enginecrop_folder, 'dir')
-               mkdir(enginecrop_folder);
-           end
+       dataset{idx, 3} = dets;
        
-           fprintf('Detect and crop identity: %s - %s..', identity, search_engine{1, se});
-           cmd = ['./face_detector ', strrep(enginecrop_folder, 'imgcrop', 'img'), '*'];
-           
-           [status, cmdout] = system(cmd);
-           fprintf('\n - Elapsed time: %.2f s\n', etime(clock, start_time));
-           imgout = strsplit(cmdout, ';');
-           
-           for i = 1:size(imgout, 2)-1            
-                output = strsplit(imgout{1, i}, ',');
-                for j = 1:size(output, 2)-1
-                    box = strsplit(output{1, j}, '+');
-                    det = zeros(4, 1);
-                    for h = 1:size(det, 1)
-                       det(h, 1) = str2num(box{1, h+1}); 
-                    end
-                    %crop and save
-                    warning off MATLAB:colon:nonIntegerIndex;
-                    %expr = 'Premature(\w+)file';
-                    path = strrep(box{1,1}, ' ', '');
-                    %path = regexprep(path, expr, '');
-                    path = strtrim(path);
-                    try
-                        im = imread(strtrim(box{1,1}));
-                        %for bigger crop
-                        w = det(3)-det(1);
-                        h = det(4)-det(2);
-                        scale = h/2;
-                        diff = [-scale, -scale, scale, scale];
-                        crop = lib.face_proc.faceCrop.crop(im, det+diff');
-                        impath = strrep(box{1,1}, 'img', 'imgcrop');
-                        impath = strrep(impath, '.jpg', '');
-                        imwrite(crop, strtrim([impath, '-', num2str(j), '.jpg']));
-                    catch
-                        fprintf('Error %s\n', path);
-                    end
-                end
-                     
-           end
-       end     
    end
+   
+   save([data_path, 'data/dataset.mat'], ['dataset', num2str(start_idx), '-', num2str(end_idx)]);
    %delete parallel pool
    delete(gcp);
 end
 
 
-fprintf('\n - Elapsed time: %.2f s\n', etime(clock, start_time));
+fprintf('\n - END- Elapsed time: %.2f s\n', etime(clock, start_time));
