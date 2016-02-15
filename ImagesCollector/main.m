@@ -8,9 +8,11 @@ start_time = clock;
 %% Load data path and set variables
 %base_path = cd;
 data_path = '/media/saverio/DATA/';
+addpath('/home/saverio/Ingegneria/Visual And Multimedia Recognition/Elaborato/vlfeat');
 collect = false;
 download = false;
-detect = true;
+detect = false;
+remove = false;
 num_to_collect = 10;
 % Indexes for detection
 start_idx = 1;
@@ -147,6 +149,17 @@ if detect == true
    %delete parallel pool
    delete(gcp);
 end
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Remove duplicate images for every identity %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+if remove == true
+    
+    
+end
+
 
 
 fprintf('\n - END- Elapsed time: %.2f s\n', etime(clock, start_time));

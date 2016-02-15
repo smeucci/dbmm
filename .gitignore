@@ -1,4 +1,5 @@
 *.m~
 *.txt~
 .gitignore~
-ImagesCollector/matconvnet
+ImagesCollector/matconvnet/
+ImagesCollector/vl_feat/
