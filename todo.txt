@@ -45,6 +45,7 @@ PRIORITA':
 
 - FATTO - face detection, salva solo le coordinate del bounding box, originale ed allargato, senza salvare nuove immagini, tieni solo l'originale
 - duplicate removal, usando vlad, uso bounding box allargata per togliere i duplicati da un'identità; cluster + selezione migliore.
+- provare dsift modficando numero di patch locali per immagine.
 - usare la rete come in lab3 face_recognition, usare bounding box originale (stretta), estrarre descrittore fc layer
 - addestrare linear svm e mostrare a gruppi di 50 i risultati della classificazione per identity (rimozione impurità + validazione visuale)
 

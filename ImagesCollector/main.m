@@ -8,7 +8,6 @@ start_time = clock;
 %% Load data path and set variables
 %base_path = cd;
 data_path = '/media/saverio/DATA/';
-addpath('/home/saverio/Ingegneria/Visual And Multimedia Recognition/Elaborato/vlfeat');
 collect = false;
 download = false;
 detect = false;
