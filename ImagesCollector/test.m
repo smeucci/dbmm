@@ -10,14 +10,14 @@ data_path = '/media/saverio/DATA/';
 load([data_path, 'data/dataset.mat']);
 
 numClusters = 64;
-for i = 1:4%size(dataset, 1)
+for i = 4:4%size(dataset, 1)
     
     fprintf('Extracting sift %s - %s..\n', dataset{i,1}, dataset{i,2});
     identity_path = [data_path, 'img/', dataset{i, 2}, '_', dataset{i, 1}, '/'];
     for j = 1:size(dataset{i, 3}, 2)
         fprintf('%d / %d\n', j, size(dataset{i,3}, 2));
         im_data = dataset{i,3}(j);
-        im_path = [identity_path, strtrim(im_data.image)];
+        im_path = [identity_path, strtrim(strrep(im_data.image, 'Premature end of JPEG file', ''))];
         im = imread(im_path);
         det = [im_data.box.left, im_data.box.top, im_data.box.right, im_data.box.bottom]';
         w = det(3) - det(1);
@@ -71,7 +71,7 @@ for i = 1:4%size(dataset, 1)
     for j = 1:size(dataset{i,3}, 2)
         im_data = dataset{i,3}(j);
         if im_data.duplicate == 1
-            im_path = [identity_path, strtrim(im_data.image)];
+            im_path = [identity_path, strtrim(strrep(im_data.image, 'Premature end of JPEG file', ''))];
             im = imread(im_path);
             det = [im_data.box.left, im_data.box.top, im_data.box.right, im_data.box.bottom]';
             w = det(3) - det(1);

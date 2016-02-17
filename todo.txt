@@ -49,6 +49,15 @@ PRIORITA':
 - usare la rete come in lab3 face_recognition, usare bounding box originale (stretta), estrarre descrittore fc layer
 - addestrare linear svm e mostrare a gruppi di 50 i risultati della classificazione per identity (rimozione impurità + validazione visuale)
 
+
+
+######################################
+- provare 800x3 con le prime quattro identità
+- fare face detection di queste e poi duplicate removal.
+- se tutto va bene, proseguire con le altre identità, su una nuova cartella, cancellando le vecchie dopo che è tutto ok per quella identità.
+
+
+
 ESECUZIONE:
 - fetch and downloaded primi 100 con check su num
 - lanciare script per crop di questi 100
