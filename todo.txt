@@ -44,10 +44,11 @@ PRIORITA':
 - studiare net di vgg, guardare laboratorio 3, matconvnet
 
 - FATTO - face detection, salva solo le coordinate del bounding box, originale ed allargato, senza salvare nuove immagini, tieni solo l'originale
-- duplicate removal, usando vlad, uso bounding box allargata per togliere i duplicati da un'identità; cluster + selezione migliore.
+- FATTO - duplicate removal, usando vlad, uso bounding box allargata per togliere i duplicati da un'identità; cluster + selezione migliore.
 - provare dsift modficando numero di patch locali per immagine.
+- FATTO - verificare se la pre-trained cnn riconosce le sue identità (si)
 - usare la rete come in lab3 face_recognition, usare bounding box originale (stretta), estrarre descrittore fc layer
-- addestrare linear svm e mostrare a gruppi di 50 i risultati della classificazione per identity (rimozione impurità + validazione visuale)
+- addestrare linear svm con le prime 50 img per se e mostrare a gruppi di 50 i risultati della classificazione per identity (verde, rosso) (rimozione impurità + validazione visuale)
 
 
 
@@ -56,7 +57,19 @@ PRIORITA':
 - fare face detection di queste e poi duplicate removal.
 - se tutto va bene, proseguire con le altre identità, su una nuova cartella, cancellando le vecchie dopo che è tutto ok per quella identità.
 
-
+RELAZIONE:
+- necessità di database grandi per cnn e difficoltà a trovare dataset gratuiti e/o difficoltà a creare dataset nuovi soprattutto l'operazione di annotazione
+- quindi creazione di pipeline per creazione di dataset già annotati
+- trovare lista di identità
+- fetch di url da vari se con python, uso database
+- download di immagini con python
+- face detector con dlib, descrizione di come funziona dlib e come l'ho implementato (c++, cmake, etc)
+- necessità di rimozione errori nel dataset tramite due fasi
+- duplicate removal, calcolo sift/dsift, generazione codebook, vlad (descrizione), clustering e rimozione duplicati
+- fc layer della cnn già addestrata, come perchè
+- addestramento linear svm con fc layer prendendo primi 50 immagini per se per ogni identity, e verificare l'identity delle altre immagini
+- infine validazione visuale tramite web interface
+- ottengo database grande annotato e pulito per cnn.
 
 ESECUZIONE:
 - fetch and downloaded primi 100 con check su num

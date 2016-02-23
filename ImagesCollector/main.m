@@ -11,10 +11,10 @@ data_path = '/media/saverio/DATA/';
 collect = false;
 download = false;
 detect = false;
-remove = false;
+remove = true;
 num_to_collect = 10;
 % Indexes for detection
-start_idx = 4;
+start_idx = 1;
 end_idx = 4;
 
 %% Load list of identities
@@ -91,8 +91,11 @@ end
 
 if detect == true
    
-   dataset = cat(2, classes.description, classes.name');
-   %load([data_path, 'data/dataset.mat']);
+   if ~exist([data_path, 'data/dataset.mat'], 'file')
+       dataset = cat(2, classes.description, classes.name');
+   else
+       load([data_path, 'data/dataset.mat']);
+   end
    
    %start parallel pool
    gcp();
@@ -149,6 +152,7 @@ if detect == true
    save([data_path, 'data/datasetAB.mat'], 'dataset');
    %delete parallel pool
    delete(gcp);
+   
 end
 
 
@@ -158,20 +162,30 @@ end
 
 if remove == true
     
-    warning off MATLAB:dispatcher:nameConflict;
     addpath(genpath('/home/saverio/Ingegneria/Visual And Multimedia Recognition/Elaborato/vlfeat/'));
 
     load([data_path, 'data/dataset.mat']);
-
+    dataset_unique = dataset;
     numClusters = 64;
-    for i = 1:4%size(dataset, 1)
-
-        fprintf('Extracting sift %s - %s..\n', dataset{i,1}, dataset{i,2});
-        identity_path = [data_path, 'img/', dataset{i, 2}, '_', dataset{i, 1}, '/'];
-        for j = 1:size(dataset{i, 3}, 2)
-            fprintf('%d / %d\n', j, size(dataset{i,3}, 2));
-            im_data = dataset{i,3}(j);
-            im_path = [identity_path, strtrim(strrep(im_data.image, 'Premature end of JPEG file', ''))];
+    
+    %start parallel pool
+    gcp();
+    
+    fprintf('## Removing duplicate images from identities %d to %d. ##\n', start_idx, end_idx);
+    parfor i = start_idx:end_idx%size(dataset, 1)
+        
+        warning off MATLAB:dispatcher:nameConflict;
+        
+        identity = dataset(i,:);
+        
+        fprintf('Extracting sift %s - %s..\n', identity{1}, identity{2});
+        identity_path = [data_path, 'img/', identity{2}, '_', identity{1}, '/'];
+        for j = 1:size(identity{3}, 2)
+            %fprintf('%d / %d\n', j, size(identity{3}, 2));
+            im_data = identity{3}(j);
+            im_data.image = strtrim(strrep(im_data.image, 'Premature end of JPEG file', ''));
+            identity{3}(j).image = im_data.image;
+            im_path = [identity_path, im_data.image];
             im = imread(im_path);
             det = [im_data.box.left, im_data.box.top, im_data.box.right, im_data.box.bottom]';
             w = det(3) - det(1);
@@ -184,63 +198,61 @@ if remove == true
                 im_crop = single(crop);
             end
             [f,d] = vl_sift(im_crop);
-            dataset{i,3}(j).descriptor = single(d);
+            identity{3}(j).descriptor = single(d);
 
         end
-        fprintf('Generating codebook..\n');
+        fprintf('Generating codebook..%s- %s\n', identity{1}, identity{2});
         vl_setup;
-        dataLearn = cat(2, dataset{i,3}.descriptor);
+        dataLearn = cat(2, identity{3}.descriptor);
         centers = vl_kmeans(dataLearn, numClusters);
         kdtree = vl_kdtreebuild(centers) ;
         
-        fprintf('Encoding %s - %s..\n', dataset{i,1}, dataset{i,2});
-        for j = 1:size(dataset{i, 3}, 2)
-            fprintf('%d / %d\n', j, size(dataset{i,3}, 2));
-            dataToBeEncoded = dataset{i,3}(j).descriptor;
+        fprintf('Encoding %s - %s..\n', identity{1}, identity{2});
+        for j = 1:size(identity{3}, 2)
+            %fprintf('%d / %d\n', j, size(identity{3}, 2));
+            dataToBeEncoded = identity{3}(j).descriptor;
             nn = vl_kdtreequery(kdtree, centers, dataToBeEncoded) ;
 
             numDataToBeEncoded = size(dataToBeEncoded, 2);
             assignments = single(zeros(numClusters,numDataToBeEncoded));
             assignments(sub2ind(size(assignments), nn, 1:length(nn))) = 1;
             enc = vl_vlad(dataToBeEncoded,centers,assignments);
-            dataset{i,3}(j).descriptor = enc;
+            identity{3}(j).descriptor = enc;
         end
 
-        fprintf('Clustering images %s - %s..\n', dataset{i,1}, dataset{i,2});
-        dataEncoded = cat(2, dataset{i,3}.descriptor);
-        centers = vl_kmeans(dataEncoded, size(dataset{i,3}, 2));
+        fprintf('Clustering images %s - %s..\n', identity{1}, identity{2});
+        dataEncoded = cat(2, identity{3}.descriptor);
+        centers = vl_kmeans(dataEncoded, size(identity{3}, 2));
         dmat = eucliddist(dataEncoded', centers');
 
         for h = 1:size(dmat, 2)
             [val, idx] = min(dmat(:,h));
-            dataset{i,3}(idx).unique = 1;
-
+            identity{3}(idx).unique = 1;
         end
 
-        if ~exist([identity_path, 'unique/'], 'dir')
-            mkdir([identity_path, 'unique/']);
-        end
-
-        fprintf('Removing duplicate images %s - %s..\n', dataset{i,1}, dataset{i,2});
-        dataset_unique = struct('image', NaN, 'identity', NaN, 'label', NaN, 'box', NaN, 'descriptor', NaN, 'unique', NaN);
+        fprintf('Removing duplicate images %s - %s..\n', identity{1}, identity{2});
+        data_unique = struct('image', NaN, 'identity', NaN, 'label', NaN, 'box', NaN);
         index = 1;
-        for j = 1:size(dataset{i,3}, 2)
-            im_data = dataset{i,3}(j);
+        for j = 1:size(identity{3}, 2)
+            im_data = identity{3}(j);
             if im_data.unique == 1
-                dataset_unique(index) = im_data;
+                data_unique(index) = rmfield(im_data, {'descriptor', 'unique'});
                 index = index + 1;
             end
-
         end
 
-        dataset{i,3} = dataset_unique;
-        clear dataset_unique;
+        dataset_unique{i,3} = data_unique;
 
-        fprintf(' - Identity: %s - %s - Elapsed time: %.2f s\n', dataset{i,1}, dataset{i,2}, etime(clock, start_time));
+        fprintf(' - Identity: %s - %s - Elapsed time: %.2f s\n', identity{1}, identity{2}, etime(clock, start_time));
 
     end
     
-    save([data_path, 'data/dataset_unique.mat'], 'dataset');
+    dataset = dataset_unique;
+    
+    save([data_path, 'data/dataset.mat'], 'dataset');
+    
+    %delete parallel pool
+    delete(gcp);
     
 end
 

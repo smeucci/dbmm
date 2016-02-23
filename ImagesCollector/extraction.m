@@ -9,7 +9,8 @@ start_time = clock;
 
 %% Load data path and set variables
 data_path = '/media/saverio/DATA/';
-addpath(genpath('/home/saverio/Ingegneria/Visual And Multimedia Recognition/Elaborato/dbmm/ImagesCollector/'));
+addpath(genpath('/home/saverio/Ingegneria/Visual And Multimedia Recognition/Elaborato/vlfeat/'));
+addpath(genpath('/home/saverio/Ingegneria/Visual And Multimedia Recognition/Elaborato/matconvnet/'));
 load([data_path, 'data/', 'identities.mat']);
 net_path = [data_path, 'data/vgg-face.mat'];
 
