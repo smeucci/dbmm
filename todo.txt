@@ -52,6 +52,7 @@ PRIORITA':
 
 TRAIN
 - prendo prime 50 img per ogni classe ed estraggo fc layer dalla pre trained cnn.
+- fare in modo di prenderle in ordine giusto
 - addestro svm e salvo il modello.
 - per ogni immagine usata per training aggiungo field nella struct con 1, indicando che è true che appartiene a quella classe
 

@@ -1,7 +1,7 @@
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Extraction of fc layer of pre-trained cnn %%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Traning of a linear SVM using fc layer of pre-trained cnn as image descriptor %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 clc;
 
@@ -71,7 +71,7 @@ end
 desc_train = double(cat(1, data_train.desc));
 labels_train = cat(1, data_train.class);
 
-model = lib.svmtrain(labels_train, desc_train, '-t 0 -c 1');
+model = lib.libsvm.svmtrain(labels_train, desc_train, '-t 0 -c 1');
 
 save([data_path, 'data/model.mat'], 'model');
 
