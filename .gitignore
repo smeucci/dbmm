@@ -1,6 +1,7 @@
 *.m~
 *.txt~
 .gitignore~
++lib/*
 ImagesCollector/matconvnet/*
 ImagesCollector/vl_feat/*
 ImagesCollector/+lib/*

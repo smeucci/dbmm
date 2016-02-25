@@ -31,14 +31,16 @@ else
     fprintf('ConvNet already loaded\n');
 end
 
-for i = 1:1%size(dataset, 1)
+data_train = [];
+index = 1;
+for i = 1:4%size(dataset, 1)
     
     identity = dataset(i,:);
     identity_path = [data_path, 'img/', identity{2}, '_', identity{1}, '/'];
     
     %extract fc layer for each image
     tot = 0;
-    for j = 1:size(identity{3}, 2)
+    for j = 1:50%size(identity{3}, 2)
         im_data = identity{3}(j);
         im_data.image = strtrim(strrep(im_data.image, 'Premature end of JPEG file', ''));
         identity{3}(j).image = im_data.image;
@@ -52,16 +54,25 @@ for i = 1:1%size(dataset, 1)
         im_ = bsxfun(@minus,im_,net.normalization.averageImage) ;
         res = vl_simplenn(net, im_);
         feature = squeeze(res(feat_layer).x);
+        data_train(index).desc = feature';
+        data_train(index).class = i;
         [score, idx] = max(res(38).x);
-        fprintf('Img %d: %s - predicted class: %s - score: %f\n', j, im_path, net.classes.description{idx}, score);
+        %fprintf('Img %d: %s - predicted class: %s - score: %f\n', j, im_path, net.classes.description{idx}, score);
         if strcmp(identity{1}, net.classes.description{idx})
             tot = tot + 1;
         end
-        
+        index = index + 1;
     end
  
     fprintf(' - Identity: %s - %s - TOT: %d, Elapsed time: %.2f s\n', identity{1}, identity{2}, tot, etime(clock, start_time));
     
 end
+
+desc_train = double(cat(1, data_train.desc));
+labels_train = cat(1, data_train.class);
+
+model = lib.svmtrain(labels_train, desc_train, '-t 0 -c 1');
+
+save([data_path, 'data/model.mat'], 'model');
 
 fprintf('\n - END- Elapsed time: %.2f s\n', etime(clock, start_time));

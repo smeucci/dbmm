@@ -50,7 +50,20 @@ PRIORITA':
 - usare la rete come in lab3 face_recognition, usare bounding box originale (stretta), estrarre descrittore fc layer
 - addestrare linear svm con le prime 50 img per se e mostrare a gruppi di 50 i risultati della classificazione per identity (verde, rosso) (rimozione impurità + validazione visuale)
 
+TRAIN
+- prendo prime 50 img per ogni classe ed estraggo fc layer dalla pre trained cnn.
+- addestro svm e salvo il modello.
+- per ogni immagine usata per training aggiungo field nella struct con 1, indicando che è true che appartiene a quella classe
 
+TEST
+- prendo tutte le immagini di una classe, una classe per volta.
+- estraggo i descrittori
+- faccio predizione usando il modello salvato.
+- in base alla predizione assegno il valore al nuovo campo della struct, 1 se la predizione mi dice che appartiene alla classe che mi aspetto, 0 altrimenti.
+
+- alla fine ho la solita variabile dataset che contiene per tutte le classe, tutte le immagini con un campo che mi dice se quella immagine corrisponde veramente, secondo il
+classificatore, alla classe in cui si trova.
+- in base a dataset, creo file di testo (meglio usare db) per ogni classe e con queste informazioni, che userò poi in php per la validazione visuale web.
 
 ######################################
 - provare 800x3 con le prime quattro identità
