@@ -31,16 +31,18 @@ else
     fprintf('ConvNet already loaded\n');
 end
 
-data_test = [];
+load([data_path, 'data/model.mat']);
+
 index = 1;
 for i = 1:1%size(dataset, 1)
     
     identity = dataset(i,:);
     identity_path = [data_path, 'img/', identity{2}, '_', identity{1}, '/'];
     
-    %extract fc layer for each image
-    tot = 0;
+    data_test = [];
     for j = 50:100%size(identity{3}, 2)
+        % take the image and crop it using the face detection coordinates.
+        disp(j);
         im_data = identity{3}(j);
         im_data.image = strtrim(strrep(im_data.image, 'Premature end of JPEG file', ''));
         identity{3}(j).image = im_data.image;
@@ -49,29 +51,38 @@ for i = 1:1%size(dataset, 1)
         det = [im_data.box.left, im_data.box.top, im_data.box.right, im_data.box.bottom]';    
         crop = lib.face_proc.faceCrop.crop(im, det);
         
+        % extract the fc layer of the pre-trained cnn as descriptor.
         im_ = single(crop);
         im_ = imresize(im_, net.normalization.imageSize(1:2)) ;
         im_ = bsxfun(@minus,im_,net.normalization.averageImage) ;
         res = vl_simplenn(net, im_);
         feature = squeeze(res(feat_layer).x);
-        data_test(index).desc = feature';
-        data_test(index).class = i;
-        [score, idx] = max(res(38).x);
-        %fprintf('Img %d: %s - predicted class: %s - score: %f\n', j, im_path, net.classes.description{idx}, score);
-        if strcmp(identity{1}, net.classes.description{idx})
-            tot = tot + 1;
+        
+        % predict the class of the image using a pre-computed svm model.
+        predicted_label = lib.libsvm.svmpredict(i, feature', model);
+        
+        % save result as field struct.
+        
+        data_test(index).image = im_data.image;
+        data_test(index).identity = im_data.label;
+        data_test(index).box = [num2str(im_data.box.left), ',', num2str(im_data.box.top), ',', ...
+                                num2str(im_data.box.right), ',', num2str(im_data.box.bottom)];
+        if i == predicted_label
+            data_test(index).predicted = 1;
+        else
+            data_test(index).predicted = 0;
         end
+      
         index = index + 1;
     end
- 
-    fprintf(' - Identity: %s - %s - TOT: %d, Elapsed time: %.2f s\n', identity{1}, identity{2}, tot, etime(clock, start_time));
+    
+    %save results to db, 
+    data_to_insert = struct2table(data_test);
+    %connect to db
+    
+    fprintf(' - Identity: %s - %s, Elapsed time: %.2f s\n', identity{1}, identity{2}, etime(clock, start_time));
     
 end
 
-desc_test = double(cat(1, data_test.desc));
-labels_test = cat(1, data_test.class);
-
-load([data_path, 'data/model.mat']);
-svm_lab = lib.libsvm.svmpredict(labels_test, desc_test, model);
 
 fprintf('\n - END- Elapsed time: %.2f s\n', etime(clock, start_time));

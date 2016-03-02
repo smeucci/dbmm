@@ -94,6 +94,7 @@ if detect == true
    if ~exist([data_path, 'data/dataset.mat'], 'file')
        dataset = cat(2, classes.description, classes.name');
    else
+       fprintf('Loading dataset..\n');
        load([data_path, 'data/dataset.mat']);
    end
    
