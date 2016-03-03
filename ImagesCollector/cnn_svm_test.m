@@ -96,8 +96,8 @@ for i = 1:1%size(dataset, 1)
     %save results to db, 
     data_to_insert = struct2table(data_test);
     
-    %fastinsert(conn, 'images', {'image', 'identity', 'box', 'predicted'}, data_to_insert); 
-    %update(conn, 'identities', {'num_images'}, tot, ['where label = "', identity{2}, '"']);
+    fastinsert(conn, 'images', {'image', 'identity', 'box', 'predicted'}, data_to_insert); 
+    update(conn, 'identities', {'num_images'}, tot, ['where label = "', identity{2}, '"']);
     
     fprintf(' - Identity: %s - %s, Elapsed time: %.2f s\n', identity{1}, identity{2}, etime(clock, start_time));
     
