@@ -163,8 +163,10 @@ end
 
 if remove == true
     
+    warning off MATLAB:dispatcher:nameConflict;
     addpath(genpath('/home/saverio/Ingegneria/Visual And Multimedia Recognition/Elaborato/vlfeat/'));
-
+    
+    fprintf('Loading dataset..\n');
     load([data_path, 'data/dataset.mat']);
     dataset_unique = dataset;
     numClusters = 64;
@@ -184,7 +186,10 @@ if remove == true
         for j = 1:size(identity{3}, 2)
             %fprintf('%d / %d\n', j, size(identity{3}, 2));
             im_data = identity{3}(j);
-            im_data.image = strtrim(strrep(im_data.image, 'Premature end of JPEG file', ''));
+            %im_data.image = strtrim(strrep(im_data.image, 'Premature end of JPEG file', ''));
+            expr = '(aol|bing|yahoo).*$';
+            tmp = regexp(im_data.image, expr, 'match');
+            im_data.image = strtrim(tmp{1});
             identity{3}(j).image = im_data.image;
             im_path = [identity_path, im_data.image];
             im = imread(im_path);

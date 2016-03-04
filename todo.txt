@@ -85,6 +85,8 @@ RELAZIONE:
 - infine validazione visuale tramite web interface
 - ottengo database grande annotato e pulito per cnn.
 
+- cambiare nome sul server a collector_new etc
+
 ESECUZIONE:
 - fetch and downloaded primi 100 con check su num
 - lanciare script per crop di questi 100
