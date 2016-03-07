@@ -66,14 +66,9 @@ for i = 1:4%size(dataset, 1)
     
     %extract fc layer for each image
     reverseStr = '';
-    maxsize = 10;
-    for j = 1:maxsize
+    max_size = 10;
+    for j = 1:max_size
         im_data = identity{3}(j);
-        %im_data.image = strtrim(strrep(im_data.image, 'Premature end of JPEG file', ''));
-        expr = '(aol|bing|yahoo).*$';
-        tmp = regexp(im_data.image, expr, 'match');
-        im_data.image = strtrim(tmp{1});
-        identity{3}(j).image = im_data.image;
         im_path = [identity_path, im_data.image];
         im = imread(im_path);
         det = [im_data.box.left, im_data.box.top, im_data.box.right, im_data.box.bottom]';    
@@ -91,7 +86,7 @@ for i = 1:4%size(dataset, 1)
         index = index + 1;
         
         %print progress
-        msg = sprintf('#Progress identity %s - %s: %d', identity{2}, identity{1}, ceil(100*(j/maxsize)));
+        msg = sprintf('#Progress identity %s - %s: %d', identity{2}, identity{1}, ceil(100*(j/max_size)));
         fprintf([reverseStr, msg]);
         reverseStr = repmat(sprintf('\b'), 1, length(msg));
         
@@ -106,8 +101,11 @@ end
 desc_train = double(cat(1, data_train.desc));
 labels_train = cat(1, data_train.class);
 
+fprintf('Computing model..\n');
 model = lib.libsvm.svmtrain(labels_train, desc_train, '-t 0 -c 1');
 
 save([data_path, 'data/model.mat'], 'model');
 
 fprintf('\n - END- Elapsed time: %.2f s\n', etime(clock, start_time));
+
+%exit;
