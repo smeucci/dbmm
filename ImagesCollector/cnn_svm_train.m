@@ -98,13 +98,13 @@ for i = 1:4%size(dataset, 1)
     
 end
 
-desc_train = double(cat(1, data_train.desc));
-labels_train = cat(1, data_train.class);
+%desc_train = double(cat(1, data_train.desc));
+%labels_train = cat(1, data_train.class);
 
-fprintf('Computing model..\n');
-model = lib.libsvm.svmtrain(labels_train, desc_train, '-t 0 -c 1');
+%fprintf('Computing model..\n');
+%model = lib.libsvm.svmtrain(labels_train, desc_train, '-t 0 -c 1');
 
-save([data_path, 'data/model.mat'], 'model');
+%save([data_path, 'data/model.mat'], 'model');
 
 fprintf('\n - END- Elapsed time: %.2f s\n', etime(clock, start_time));
 
