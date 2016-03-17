@@ -71,16 +71,28 @@ classificatore, alla classe in cui si trova.
 - fare face detection di queste e poi duplicate removal.
 - se tutto va bene, proseguire con le altre identità, su una nuova cartella, cancellando le vecchie dopo che è tutto ok per quella identità.
 
+
+DA FARE:
+- nel database dataset, estendere tabella identities con colonne: num_detected, num_unique
+- creare tabella detection, corrisponde a informazioni in dataset-1000.mat
+- creare tabella unique, corrisponde a informazione dataset-unique1000.mat
+- sistemare codice in modo che lavori con il database invece che con i file .mat
+- cambiare nome database da collector_new a collector ed eliminare il vecchio collector
+- fare backup e cancellare roba che non serve più
+- pulizia generale anche dei file sorgente
+
+
 RELAZIONE:
 - necessità di database grandi per cnn e difficoltà a trovare dataset gratuiti e/o difficoltà a creare dataset nuovi soprattutto l'operazione di annotazione
 - quindi creazione di pipeline per creazione di dataset già annotati
-- trovare lista di identità
+- due fasi principali: creazione dataset e pulizia dataset
+- trovare lista di identità, citare articolo deep face rec
 - fetch di url da vari se con python, uso database
 - download di immagini con python
 - face detector con dlib, descrizione di come funziona dlib e come l'ho implementato (c++, cmake, etc)
 - necessità di rimozione errori nel dataset tramite due fasi
-- duplicate removal, calcolo sift/dsift, generazione codebook, vlad (descrizione), clustering e rimozione duplicati
-- fc layer della cnn già addestrata, come perchè
+- duplicate removal, calcolo sift/dsift, generazione codebook, vlad (descrizione), clustering e rimozione duplicati, cit articolo su vlad
+- fc layer della cnn già addestrata, come perchè, cit slide prof?
 - addestramento linear svm con fc layer prendendo primi 50 immagini per se per ogni identity, e verificare l'identity delle altre immagini
 - infine validazione visuale tramite web interface
 - ottengo database grande annotato e pulito per cnn.
