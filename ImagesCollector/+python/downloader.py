@@ -233,15 +233,14 @@ if len(sys.argv) > 1:
             'label': sys.argv[2].encode('utf-8')
     }
     DATA_DIR = sys.argv[3].encode('utf-8')
-else:
-    identity = {
-            'name': 'Leo_Messi',
-            'label': 'n00000001-test'
-    }
-    DATA_DIR='/media/saverio/DATA/'
 
-pwd = 'pwd'
-downloader(identity, DATA_DIR)    
+    pwd = 'pwd'
+    downloader(identity, DATA_DIR)    
+
+else:
+    print 'No parameters were passed.'
+
+
    
     
     

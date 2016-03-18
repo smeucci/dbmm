@@ -497,17 +497,17 @@ if len(sys.argv) > 1:
             'label': sys.argv[2].encode('utf-8')
     }
     num_of_imgs = int(sys.argv[3])
+
+    pwd = 'pwd'
+    insert_identity(identity)
+    print 'Identity: ' + identity['name']
+    search(identity, num_of_imgs)
+    
 else:
-    identity = {
-            'name': 'Leo_Messi',
-            'label': 'n00000001-test'
-    }
-    num_of_imgs = 10
+    print 'No parameters were passed.'
+  
         
-pwd = 'pwd'
-insert_identity(identity)
-print 'Identity: ' + identity['name']
-search(identity, num_of_imgs)
+
 
         
         
