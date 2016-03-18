@@ -118,9 +118,9 @@ function test_svm_cnn(data_path, start_idx, end_idx, start_time)
             index = index + 1;
 
             %print progress
-            msg = sprintf('#Progress identity %s - %s: %d', identity{2}, identity{1}, ceil(100*(j/max_size)));
-            fprintf([reverseStr, msg]);
-            reverseStr = repmat(sprintf('\b'), 1, length(msg));
+            %msg = sprintf('#Progress identity %s - %s: %d', identity{2}, identity{1}, ceil(100*(j/max_size)));
+            %fprintf([reverseStr, msg]);
+            %reverseStr = repmat(sprintf('\b'), 1, length(msg));
 
         end
         fprintf('\n');

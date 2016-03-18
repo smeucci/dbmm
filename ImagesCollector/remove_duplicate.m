@@ -1,7 +1,6 @@
 function remove_duplicate(data_path, start_idx, end_idx, start_time)
 
     warning off MATLAB:dispatcher:nameConflict;
-    addpath(genpath('/home/saverio/Ingegneria/Visual And Multimedia Recognition/Elaborato/lib.vlfeat/'));
     
     fprintf('Loading dataset..\n');
     d = load([data_path, 'data/dataset.mat']);
