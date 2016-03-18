@@ -6,6 +6,7 @@ function collect(classes, start_idx, end_idx, num_to_collect)
         
         collect_cmd = ['python +python/collector.py ', '"', identity, '" ', '"', label, '" ', '"', num2str(num_to_collect), '"'];
         system(collect_cmd);
+        fprintf('\n');
         pause(10);
     end
 

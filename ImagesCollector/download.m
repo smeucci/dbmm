@@ -6,6 +6,7 @@ function download(classes, start_idx, end_idx, data_path)
     
         download_cmd = ['python +python/downloader.py ', '"', identity, '" ', '"', label, '" ', '"', data_path, '" '];
         system(download_cmd);
+        fprintf('\n');
         pause(5);
     end
 

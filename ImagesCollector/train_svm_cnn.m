@@ -3,6 +3,9 @@ function train_svm_cnn(data_path, start_idx, end_idx, start_time)
     %warning off MATLAB:dispatcher:nameConflict;
     %warning off MATLAB:colon:nonIntegerIndex;
     warning off;
+    
+    addpath(genpath('/home/saverio/Ingegneria/Visual And Multimedia Recognition/Elaborato/matconvnet'));
+    vl_setupnn;
 
     %load dataset 
     if ~exist('dataset','var')
@@ -51,7 +54,7 @@ function train_svm_cnn(data_path, start_idx, end_idx, start_time)
         end
 
         %extract fc layer for each image
-        reverseStr = '';
+        %reverseStr = '';
         max_size = 10;
         
         for j = 1:max_size
@@ -64,7 +67,7 @@ function train_svm_cnn(data_path, start_idx, end_idx, start_time)
             im_ = single(crop);
             im_ = imresize(im_, net.normalization.imageSize(1:2)) ;
             im_ = bsxfun(@minus,im_,net.normalization.averageImage) ;
-            res = lib.matconvnet.simplenn.vl_simplenn(net, im_);
+            res = vl_simplenn(net, im_);
             feature = squeeze(res(feat_layer).x);
 
             %saving result as struct
