@@ -16,11 +16,11 @@ do_train = false;
 do_test = false;
 do_crop = false;
 
-num_to_collect = 10;
+num_to_collect = 0;
 
 % Indexes for cycling
-start_idx = 1;
-end_idx = 2;
+start_idx = 0;
+end_idx = 0;
 
 
 %% Load list of identities

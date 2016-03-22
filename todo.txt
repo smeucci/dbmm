@@ -1,6 +1,24 @@
 ELABORATO DBMM:
 
 
+PER FINIRE:
+
+- implementare necessario per automatizzare il deploy
+- creare file di configurazione con variabili per: numero di immagini da scaricare, quali search engine disponibili utilizzare, quante classi usare per la classificazione, nome database e password
+- migliorare tabella collector, introducendo foreign key e autoincrement per gli url
+- scrivere script che creare il database con lo schema corretto per il futuro utilizzo
+- mettere la possibilità sul sito di eliminare completamente un'identità, cioè non considerarla (es. carlo sanchez)
+- mettere funzioni di export nel sito: in base alla tabella nel db (predicted & validation), creo una cartella con le immagini (crop e non) validate, insieme ad un dump che contiene il database con le relative informazioni (nome immagini, identità, bounding box, ecc)
+- sistemare un po' il tutto, commentare meglio, migliorare i nomi utilizzati, verificare che non ci siano problemi con i .mat (es. li creo io prima)
+
+
+
+
+
+
+
+
+
 - FATTO - automatizzare download delle immagini: fare in modo che l'url cicli in modo da prendere le prime 28 immagini di query e poi le seconde 28, 
 e così via fine ad un numero desiderato.
 - FATTO - fixare il fatto che non ti crea la cartella per la query 
