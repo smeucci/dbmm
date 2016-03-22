@@ -10,7 +10,8 @@ PER FINIRE:
 - mettere la possibilità sul sito di eliminare completamente un'identità, cioè non considerarla (es. carlo sanchez)
 - mettere funzioni di export nel sito: in base alla tabella nel db (predicted & validation), creo una cartella con le immagini (crop e non) validate, insieme ad un dump che contiene il database con le relative informazioni (nome immagini, identità, bounding box, ecc)
 - sistemare un po' il tutto, commentare meglio, migliorare i nomi utilizzati, verificare che non ci siano problemi con i .mat (es. li creo io prima)
-
+- validare 100 identità delle 1000 e 100 del test
+- calcolare statistiche
 
 
 
