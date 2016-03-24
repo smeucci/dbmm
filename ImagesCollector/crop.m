@@ -1,13 +1,14 @@
-function crop(data_path, start_time)
+function crop(DATA_PATH, start_time, config)
+% CROP crops the images of the dataset after the classification phase
 
     %create folder img_validation
-    img_folder = [data_path, 'img_crop/'];
+    img_folder = [DATA_PATH, 'img_crop/'];
     if ~exist(img_folder, 'dir')
         mkdir(img_folder);
     end
 
     %connect to database
-    conn = database('dataset_test', 'root', 'pwd', 'Vendor', 'MySQL', 'Server', 'localhost');
+    conn = database(config.DATABASE_DATASET, config.DB_USER, config.DB_PWD, 'Vendor', 'MySQL', 'Server', config.DB_LOCATION);
 
     %query all the identities
     query = 'SELECT label, name FROM identities';
@@ -45,7 +46,7 @@ function crop(data_path, start_time)
             predicted = images{j, 5};
             validation = images{j, 6};
 
-            im_path = [data_path, 'img/', label, '_', name, '/', image];
+            im_path = [DATA_PATH, 'img/', label, '_', name, '/', image];
 
             %crop the image
             split_box = strsplit(box, ',');

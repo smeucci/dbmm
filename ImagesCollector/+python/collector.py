@@ -62,16 +62,23 @@ def search(identity, num_of_imgs):
     
     #start threads
     threads = []
-    bing_search = Thread(target=fetcher, args=(queue, 'bing', data))
-    aol_search_1 = Thread(target=fetcher, args=(queue, 'aol1', data))
-    aol_search_2 = Thread(target=fetcher, args=(queue, 'aol2', data))
-    #duck_search = Thread(target=fetcher, args=(queue, 'duck', data))
-    yahoo_search = Thread(target=fetcher, args=(queue, 'yahoo', data))
-    threads.append(bing_search)
-    threads.append(aol_search_1)
-    threads.append(aol_search_2)
-    #threads.append(duck_search)
-    threads.append(yahoo_search)
+    if use_bing == 'true':
+        
+        bing_search = Thread(target=fetcher, args=(queue, 'bing', data))
+        threads.append(bing_search)
+        
+    if use_aol == 'true':
+        
+        aol_search_1 = Thread(target=fetcher, args=(queue, 'aol1', data))
+        aol_search_2 = Thread(target=fetcher, args=(queue, 'aol2', data))
+        threads.append(aol_search_1)
+        threads.append(aol_search_2)
+        
+    if use_yahoo == 'true':
+        
+        yahoo_search = Thread(target=fetcher, args=(queue, 'yahoo', data))
+        threads.append(yahoo_search)
+    
     
     for t in threads:
         t.start()
@@ -389,7 +396,7 @@ def get_html(url, header):
 
 #insert a new identity in the db
 def insert_identity(identity):    
-    db = MySQLdb.connect('127.0.0.1', 'root', pwd, 'collector')
+    db = MySQLdb.connect(location, user, pwd, database)
     cursor = db.cursor()  
     rollback = False
     try:
@@ -410,7 +417,7 @@ def insert_identity(identity):
     
 #update identity status
 def update_identity_status(identity, status):  
-    db = MySQLdb.connect('127.0.0.1', 'root', pwd, 'collector')
+    db = MySQLdb.connect(location, user, pwd, database)
     cursor = db.cursor() 
     rollback = False
                       
@@ -432,7 +439,7 @@ def update_identity_status(identity, status):
 
 #update number of urls fetched for an identity
 def update_identity_urls(identity, queue_size):
-    db = MySQLdb.connect('127.0.0.1', 'root', pwd, 'collector')
+    db = MySQLdb.connect(location, user, pwd, database)
     cursor = db.cursor() 
     rollback = False
                       
@@ -455,7 +462,7 @@ def update_identity_urls(identity, queue_size):
 #save info (url, etc..) of an image to db
 def insert_urls(queue, identity, queue_size):
     print identity['name'] + ' - Saving to db..'
-    db = MySQLdb.connect('127.0.0.1', 'root', pwd, 'collector')
+    db = MySQLdb.connect(location, user, pwd, database)
     cursor = db.cursor()
     rollback = False
     
@@ -485,20 +492,65 @@ def insert_urls(queue, identity, queue_size):
         update_identity_status(identity, 'OK')
         update_identity_urls(identity, queue_size)
         
+        
+#read configuration file
+def readconf(fn):
+    ret = {}
+    with file(fn) as fp:
+        for line in fp:
+            # Assume whitespace is ignorable
+            line = line.strip()
+            if not line or line.startswith('#'): continue
+ 
+            boolval = True
+            # Assume leading ";" means a false boolean
+            if line.startswith(';'):
+                # Remove one or more leading semicolons
+                line = line.lstrip(';')
+                # If more than just one word, not a valid boolean
+                if len(line.split()) != 1: continue
+                boolval = False
+ 
+            bits = line.split(None, 1)
+            if len(bits) == 1:
+                # Assume booleans are just one standalone word
+                k = bits[0]
+                v = boolval
+            else:
+                # Assume more than one word is a string value
+                k, v = bits
+            ret[k.lower()] = v
+            
+    return ret
 
 
 ########################
 ##### START SCRIPT #####
 ########################
 
+
 if len(sys.argv) > 1:
+    
+    conf = readconf('config/config.conf')
+    
     identity = {
             'name': sys.argv[1].encode('utf-8'),
             'label': sys.argv[2].encode('utf-8')
     }
-    num_of_imgs = int(sys.argv[3])
+    num_of_imgs = int(conf['num_to_collect'])
 
-    pwd = 'pwd'
+    # db parameters
+    location = conf['db_location']
+    database = conf['database_collector']
+    user = conf['db_user']
+    pwd = conf['db_pwd']
+    
+    # search engine parameters
+    use_bing = conf['use_bing']
+    use_aol = conf['use_aol']
+    use_yahoo = conf['use_yahoo']
+    
+    
     insert_identity(identity)
     print 'Identity: ' + identity['name']
     search(identity, num_of_imgs)

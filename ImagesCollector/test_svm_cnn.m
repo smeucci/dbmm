@@ -1,4 +1,5 @@
-function test_svm_cnn(data_path, start_idx, end_idx, start_time)
+function test_svm_cnn(DATA_PATH, start_idx, end_idx, start_time, config)
+% TEST_SVM_CNN classifies each image of the dataset
 
     %warning off MATLAB:dispatcher:nameConflict;
     %warning off MATLAB:colon:nonIntegerIndex;
@@ -9,18 +10,17 @@ function test_svm_cnn(data_path, start_idx, end_idx, start_time)
     
     %load dataset
     if ~exist('net','var')
-        fprintf('Loading dataset\n\n');
-        load([data_path, 'data/dataset.mat']);
+        fprintf('Loading dataset\n');
+        load([DATA_PATH, 'data/dataset.mat']);
+        fprintf('Dataset loaded in %.2f s\n\n', etime(clock, start_time));
     else
         fprintf('Dataset already loaded\n\n');
     end
 
-    feat_layer = 36;
-
     %load pre trained net
     if ~exist('net','var')
         fprintf('Loading ConvNet\n\n');
-        net = load([data_path, 'data/vgg-face.mat']);
+        net = load([DATA_PATH, 'data/vgg-face.mat']);
     else
         fprintf('ConvNet already loaded\n\n');
     end
@@ -28,17 +28,19 @@ function test_svm_cnn(data_path, start_idx, end_idx, start_time)
     %load training model
     if ~exist('data_train','var')
         fprintf('Loading training data\n\n');
-        load([data_path, 'data/data_train.mat']);
+        load([DATA_PATH, 'data/data_train.mat']);
     else
         fprintf('Training data already loaded\n\n');
     end
 
+    FEAT_LAYER = str2double(config.FEAT_LAYER);
+    NUM_OF_IMAGE_PER_CLASS_TRAIN = str2double(config.NUM_OF_IMAGE_PER_CLASS_TRAIN);
+    NUM_OF_VERSUS_IDENTITIES = str2double(config.NUM_OF_VERSUS_IDENTITIES);
+    
     size_of_data_train = size(data_train, 2);
-    num_of_desc_per_identity = 10;
-    num_of_versus_identity = 1;
-
+    
     %connect to database
-    conn = database('dataset_test', 'root', 'pwd', 'Vendor', 'MySQL', 'Server', 'localhost');
+    conn = database(config.DATABASE_DATASET, config.DB_USER, config.DB_PWD, 'Vendor', 'MySQL', 'Server', config.DB_LOCATION);
 
     fprintf('########## CLASSIFICATION from %d to %d ##########\n\n', start_idx, end_idx);
 
@@ -46,31 +48,31 @@ function test_svm_cnn(data_path, start_idx, end_idx, start_time)
 
         index = 1;
         identity = dataset(i,:);
-        identity_path = [data_path, 'img/', identity{2}, '_', identity{1}, '/'];
+        identity_path = [DATA_PATH, 'img/', identity{2}, '_', identity{1}, '/'];
         fprintf('Images classification of identity %s - %s\n', identity{2}, identity{1});
 
         %create tmp data_train related to the identity
-        end_ = i*num_of_desc_per_identity;
-        begin_ = end_ - num_of_desc_per_identity + 1;
+        end_ = i*NUM_OF_IMAGE_PER_CLASS_TRAIN;
+        begin_ = end_ - NUM_OF_IMAGE_PER_CLASS_TRAIN + 1;
 
         %select a random integer to determine a set of identities to be train
         %against the current identity i
         if end_ <= size_of_data_train/2
-           % r = randi([end_+1, size_of_data_train-(num_of_versus_identity*num_of_desc_per_identity)], 1, 1);
-           r = 11;
+           r = randi([end_+1, size_of_data_train-(NUM_OF_VERSUS_IDENTITIES*NUM_OF_IMAGE_PER_CLASS_TRAIN)], 1, 1);
+           % r = 11;
         else
-           % r = randi([1, (size_of_data_train/2)-(num_of_versus_identity*num_of_desc_per_identity)], 1, 1);
-           r = 1;
+           r = randi([1, (size_of_data_train/2)-(NUM_OF_VERSUS_IDENTITIES*NUM_OF_IMAGE_PER_CLASS_TRAIN)], 1, 1);
+           % r = 1;
         end
 
         
         %create descriptors 
         data_train_identity = data_train(begin_:end_);
-        data_train_versus = data_train(r:r+(num_of_versus_identity*num_of_desc_per_identity)-1);
+        data_train_versus = data_train(r:r+(NUM_OF_VERSUS_IDENTITIES*NUM_OF_IMAGE_PER_CLASS_TRAIN)-1);
 
         %create labels
-        label_identity = ones(num_of_desc_per_identity,1);
-        label_versus = zeros(num_of_versus_identity*num_of_desc_per_identity,1);
+        label_identity = ones(NUM_OF_IMAGE_PER_CLASS_TRAIN,1);
+        label_versus = zeros(NUM_OF_VERSUS_IDENTITIES*NUM_OF_IMAGE_PER_CLASS_TRAIN,1);
 
         %create svm model
         desc_train = double(cat(1, data_train_identity.desc, data_train_versus.desc));
@@ -99,7 +101,7 @@ function test_svm_cnn(data_path, start_idx, end_idx, start_time)
             im_ = imresize(im_, net.normalization.imageSize(1:2)) ;
             im_ = bsxfun(@minus,im_,net.normalization.averageImage) ;
             res = vl_simplenn(net, im_);
-            feature = squeeze(res(feat_layer).x)';
+            feature = squeeze(res(FEAT_LAYER).x)';
 
             % predict the class of the image using a pre-computed svm model.
             [output, predicted_label] = evalc('lib.libsvm.svmpredict(i, double(feature), model)');
@@ -131,7 +133,7 @@ function test_svm_cnn(data_path, start_idx, end_idx, start_time)
         %save results to db
         data_to_insert = struct2cell(data_test);
         fprintf('Saving identity %s - %s: Elapsed time: %.2f s\n', identity{2}, identity{1}, etime(clock, start_time));
-        datainsert(conn, 'images', {'image', 'identity', 'box', 'predicted'}, squeeze(data_to_insert)');
+        fastinsert(conn, 'images', {'image', 'identity', 'box', 'predicted'}, squeeze(data_to_insert)');
         update(conn, 'identities', {'num_images'}, tot, ['where label = "', identity{2}, '"']);
 
         fprintf(' - Identity: %s - %s, Elapsed time: %.2f s\n\n', identity{1}, identity{2}, etime(clock, start_time));

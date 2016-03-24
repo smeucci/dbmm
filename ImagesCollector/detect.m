@@ -1,11 +1,13 @@
-function detect(classes, data_path, start_idx, end_idx, start_time)
+function detect(classes, DATA_PATH, start_idx, end_idx, start_time)
+% DETECT detects faces in the dataset of images using dlib
 
     %create dataset variable or load it
-   if ~exist([data_path, 'data/dataset.mat'], 'file')
+   if ~exist([DATA_PATH, 'data/dataset.mat'], 'file')
        dataset = cat(2, classes.description, classes.name');
    else
        fprintf('Loading dataset..\n');
-       load([data_path, 'data/dataset.mat']);
+       load([DATA_PATH, 'data/dataset.mat']);
+       fprintf('Dataset loaded in %.2f s\n', etime(clock, start_time));
    end
    
    identities = classes.description;
@@ -23,7 +25,7 @@ function detect(classes, data_path, start_idx, end_idx, start_time)
        dets = [];
        index = 1;
        
-       identity_path = [data_path, 'img/',  label, '_', identity, '/'];
+       identity_path = [DATA_PATH, 'img/',  label, '_', identity, '/'];
               
        cmd = ['exec/./face_detector ', identity_path, '*/*.jpg'];
        [status, cmdout] = system(cmd);
@@ -69,9 +71,9 @@ function detect(classes, data_path, start_idx, end_idx, start_time)
        
    end
    
-   save([data_path, 'data/dataset.mat'], 'dataset');
+   save([DATA_PATH, 'data/dataset.mat'], 'dataset');
    %save backup
-   save([data_path, 'data/dataset-detection.mat'], 'dataset');
+   save([DATA_PATH, 'data/dataset-detection.mat'], 'dataset');
    %delete parallel pool
    delete(gcp);
 

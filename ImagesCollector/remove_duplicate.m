@@ -1,9 +1,12 @@
-function remove_duplicate(data_path, start_idx, end_idx, start_time)
+function remove_duplicate(DATA_PATH, start_idx, end_idx, start_time)
+% REMOVE_DUPLICATE removes duplicated images from the dataset
 
     warning off MATLAB:dispatcher:nameConflict;
     
     fprintf('Loading dataset..\n');
-    d = load([data_path, 'data/dataset.mat']);
+    d = load([DATA_PATH, 'data/dataset.mat']);
+    fprintf('Dataset loaded in %.2f s\n', etime(clock, start_time));
+    
     dataset = d.dataset;
     dataset_unique = dataset;
     numClusters = 64;
@@ -19,7 +22,7 @@ function remove_duplicate(data_path, start_idx, end_idx, start_time)
         identity = dataset(i,:);
         
         fprintf('Extracting sift %s - %s..\n', identity{1}, identity{2});
-        identity_path = [data_path, 'img/', identity{2}, '_', identity{1}, '/'];
+        identity_path = [DATA_PATH, 'img/', identity{2}, '_', identity{1}, '/'];
         
         for j = 1:size(identity{3}, 2)
             
@@ -102,9 +105,9 @@ function remove_duplicate(data_path, start_idx, end_idx, start_time)
     
     dataset = dataset_unique;
     
-    save([data_path, 'data/dataset.mat'], 'dataset');
+    save([DATA_PATH, 'data/dataset.mat'], 'dataset');
     %save_backup
-    save([data_path, 'data/dataset-unique'], 'dataset');
+    save([DATA_PATH, 'data/dataset-unique'], 'dataset');
     
     %delete parallel pool
     delete(gcp);

@@ -5,35 +5,27 @@ clc;
 %start timer
 start_time = clock;
 
-%% Load data path and set variables
-data_path = '/media/saverio/DATA/TEST/';
+%% Load config file
+config = readconf('config/config.conf');
 
-do_collect = false;
-do_download = false;
-do_detect = false;
-do_remove = false;
-do_train = false;
-do_test = false;
-do_crop = false;
-
-num_to_collect = 0;
-
-% Indexes for cycling
-start_idx = 0;
-end_idx = 0;
+START_IDX = str2double(config.START_IDX);
+END_IDX = str2double(config.END_IDX);
 
 
 %% Load list of identities
-load([data_path, 'data/', 'identities.mat']);
-
+if strcmp(config.USE_MATFILE, 'true')
+    load([config.DATA_PATH, 'data/', 'identities.mat']);
+else
+    %do something
+end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Collect images for list of identities %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-if do_collect == true
+if strcmp(config.DO_COLLECT, 'true')
     
-    collect(classes, start_idx, end_idx, num_to_collect);
+    collect(classes, START_IDX, END_IDX);
     
 end
 
@@ -42,9 +34,9 @@ end
 %% Download images for list of identities %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-if do_download == true
+if strcmp(config.DO_DOWNLOAD, 'true')
     
-    download(classes, start_idx, end_idx, data_path);
+    download(classes, START_IDX, END_IDX);
     
 end
 
@@ -53,9 +45,9 @@ end
 %% Detect and crop the images donwloaded for each identity %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-if do_detect == true
+if strcmp(config.DO_DETECT, 'true')
    
-   detect(classes, data_path, start_idx, end_idx, start_time);
+   detect(classes, config.DATA_PATH, START_IDX, END_IDX, start_time);
    
 end
 
@@ -64,9 +56,9 @@ end
 %% Remove duplicate images for every identity %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-if do_remove == true
+if strcmp(config.DO_REMOVE, 'true')
     
-    remove_duplicate(data_path, start_idx, end_idx, start_time);
+    remove_duplicate(config.DATA_PATH, START_IDX, END_IDX, start_time);
     
 end
 
@@ -75,9 +67,9 @@ end
 %% Traning of a linear SVM using fc layer of pre-trained cnn as image descriptor %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-if do_train == true
+if strcmp(config.DO_TRAIN, 'true')
     
-   train_svm_cnn(data_path, start_idx, end_idx, start_time);
+   train_svm_cnn(config.DATA_PATH, START_IDX, END_IDX, start_time, config);
     
 end
 
@@ -86,9 +78,9 @@ end
 %% Classification with a linear SVM using fc layer of pre-trained cnn as image descriptor %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-if do_test == true
+if strcmp(config.DO_TEST, 'true')
     
-   test_svm_cnn(data_path, start_idx, end_idx, start_time);
+   test_svm_cnn(config.DATA_PATH, START_IDX, END_IDX, start_time, config);
     
 end
 
@@ -97,9 +89,9 @@ end
 %% Cropping images for the visual validation  %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-if do_crop == true
+if strcmp(config.DO_CROP, 'true')
     
-   crop(data_path, start_time);
+   crop(config.DATA_PATH, start_time, config);
     
 end
 

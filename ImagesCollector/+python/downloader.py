@@ -92,7 +92,7 @@ def download_slave(queue, image):
     except:
         return None
     else:
-        if len(raw) >= 50000:
+        if len(raw) >= 10000:
             image.set_raw(raw)
             queue.put(image)
             #print image.identity + ' - Downloaded from: ' + image.url + ' - engine: ' + str(image.engine)    
@@ -145,7 +145,7 @@ def save(queue, identity, DATA_DIR):
 
 #select urls from db for a given identity, returns a list of object of class Image
 def select_urls(identity):
-    db = MySQLdb.connect('127.0.0.1', 'root', pwd, 'collector')
+    db = MySQLdb.connect(location, user, pwd, database)
     cursor = db.cursor()  
     rollback = False
     images = []
@@ -179,7 +179,7 @@ def select_urls(identity):
     
 #update number of images downloaded for an identity
 def update_identity_images(identity, queue_size):
-    db = MySQLdb.connect('127.0.0.1', 'root', pwd, 'collector')
+    db = MySQLdb.connect(location, user, pwd, database)
     cursor = db.cursor() 
     rollback = False
                       
@@ -201,7 +201,7 @@ def update_identity_images(identity, queue_size):
 
 #update status for an identity
 def update_identity_status(identity, status):
-    db = MySQLdb.connect('127.0.0.1', 'root', pwd, 'collector')
+    db = MySQLdb.connect(location, user, pwd, database)
     cursor = db.cursor() 
     rollback = False
                       
@@ -221,6 +221,36 @@ def update_identity_status(identity, status):
         print 'Rollback: update_identity_status'
     
    
+#read configuration file
+def readconf(fn):
+    ret = {}
+    with file(fn) as fp:
+        for line in fp:
+            # Assume whitespace is ignorable
+            line = line.strip()
+            if not line or line.startswith('#'): continue
+ 
+            boolval = True
+            # Assume leading ";" means a false boolean
+            if line.startswith(';'):
+                # Remove one or more leading semicolons
+                line = line.lstrip(';')
+                # If more than just one word, not a valid boolean
+                if len(line.split()) != 1: continue
+                boolval = False
+ 
+            bits = line.split(None, 1)
+            if len(bits) == 1:
+                # Assume booleans are just one standalone word
+                k = bits[0]
+                v = boolval
+            else:
+                # Assume more than one word is a string value
+                k, v = bits
+            ret[k.lower()] = v
+            
+    return ret
+    
     
 ########################
 ##### START SCRIPT #####
@@ -228,13 +258,22 @@ def update_identity_status(identity, status):
     
     
 if len(sys.argv) > 1:
+    
+    conf = readconf('config/config.conf')
+
     identity = {
             'name': sys.argv[1].encode('utf-8'),
             'label': sys.argv[2].encode('utf-8')
     }
-    DATA_DIR = sys.argv[3].encode('utf-8')
+    DATA_DIR = conf['data_path']
+    
+    # db parameters
+    location = conf['db_location']
+    database = conf['database_collector']
+    user = conf['db_user']
+    pwd = conf['db_pwd']
 
-    pwd = 'pwd'
+
     downloader(identity, DATA_DIR)    
 
 else:
