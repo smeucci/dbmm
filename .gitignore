@@ -4,18 +4,6 @@
 +lib/*
 .DS_Store
 
-ImagesCollector/+lib/+vlfeat/*.*
-ImagesCollector/+lib/+libsvm/*.*
-ImagesCollector/+lib/+face_detector/*.*
-ImagesCollector/+lib/+face_feats/*.*
-ImagesCollector/+lib/+face_proc/*.*
-
-ImagesCollector/+lib/+vlfeat/*/
-ImagesCollector/+lib/+libsvm/*/
-ImagesCollector/+lib/+face_detector/*/
-ImagesCollector/+lib/+face_feats/*/
-ImagesCollector/+lib/+face_proc/*/
-
 /ImagesCollector/config/config.conf
 /ImagesCollector/.project
 /ImagesCollector/.pydevproject
