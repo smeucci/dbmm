@@ -2,9 +2,9 @@
 *.txt~
 .gitignore~
 +lib/*
-ImagesCollector/matconvnet/*
+
 ImagesCollector/vl_feat/*
 ImagesCollector/+lib/*
-ImagesCollector/config/config.conf
-ImagesCollector/.project
-ImagesCollector/.pydevproject
+/ImagesCollector/config/config.conf
+/ImagesCollector/.project
+/ImagesCollector/.pydevproject
