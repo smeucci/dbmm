@@ -103,7 +103,6 @@ def fetcher(queue, search_engine, data):
             'bing': fetcher_bing,
             'aol1': fetcher_aol_1,
             'aol2': fetcher_aol_2,
-            'duck': fetcher_duck,
             'yahoo': fetcher_yahoo
     }
     func = switcher.get(search_engine)
@@ -201,39 +200,11 @@ def fetcher_aol_2(queue, search_engine, data):
             }
             num = parser(html, info, queue)
 
-
-def fetcher_duck(queue, search_engine, data):
-    #the proxy to use
-    proxy_url = 'http://fresh-proxy.appspot.com/'
-    
-    count = 35
-    rounds = int(math.ceil((data['num_of_imgs']) / count)) + 1
-    
-    num = 1000 #needs to be bigger than count
-    for rnd in range(0, rounds):
-        #check if imgurls returned in previous iteration are not too low; that means angry search engine
-        if (num > 10):
-            #create the query url       
-            url = proxy_url + 'duckduckgo.com/i.js?q='+data['query']+'&s='+str(rnd)
-                                
-            #get html page for the query    
-            html = get_html(url.encode('utf-8'), data['header'])
-            
-            #retrieve the imgurls for the query by parsing the html page
-            info = {
-                'count': count,
-                'round': rnd,
-                'proxy': proxy_url,
-                'query': data['query'],
-                'label': data['label'],
-                'engine': search_engine
-            }
-            num = parser(html, info, queue)
-
     
 def fetcher_yahoo(queue, search_engine, data):
     #the proxy to use
-    proxy_url = 'http://fresh-proxy.appspot.com/'
+    #proxy_url = 'http://fresh-proxy.appspot.com/'
+    proxy_url = 'http://anonymouse.org/cgi-bin/anon-www.cgi/http://'
     
     first, count = 1, 40
     rounds = int(math.ceil((data['num_of_imgs']) / count)) + 1
@@ -330,34 +301,6 @@ def parser_aol(html, info, queue):
                                              ' - num: ' + str(num)
     return num
 
-def parser_duck(html, info, queue):
-    rank = (info['count'] * info['round']) + 1
-    num = 0
-    #parser the html
-    imgurls = re.findall('image":[\'"]?([^\'" <>]+)', str(html))
-    for imgurl in imgurls:
-        if imgurl:
-            #inizialize object of class Image
-            img = Image()
-            #parse the url
-            url = imgurl
-            #compute the rank of the image
-            img_rank = rank
-            #build a unique id for the image
-            img_id = info['engine'] + str(img_rank) + '_' + info['label']
-            #set attributes of the object
-            img.set_attr(img_id, info['label'], info['query'].replace('+', '_'), url, img_rank , info['engine'])
-            #put into queue
-            queue.put(img)
-            #update rank
-            rank = rank + 1
-            num = num + 1 #info, just for testing
-    
-                
-    print info['query'].replace('+', '_') + ' - Number of fetched urls by duckduckgo: ' + str(queue.qsize()) + \
-                                             ' - num: ' + str(num)
-    return num              
-        
                                   
 def parser_yahoo(html, info, queue):
     rank = (info['count'] * info['round']) + 1
