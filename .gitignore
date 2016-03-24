@@ -5,6 +5,6 @@
 ImagesCollector/matconvnet/*
 ImagesCollector/vl_feat/*
 ImagesCollector/+lib/*
-config/config.conf
-.project
-.pydevproject
+ImagesCollector/config/config.conf
+ImagesCollector/.project
+ImagesCollector/.pydevproject
