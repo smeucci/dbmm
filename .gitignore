@@ -4,7 +4,7 @@
 +lib/*
 .DS_Store
 
-ImagesCollector/+lib/+vl_feat/*
+ImagesCollector/+lib/+vlfeat/*
 ImagesCollector/+lib/+libsvm/*
 ImagesCollector/+lib/+face_detector/*
 ImagesCollector/+lib/+face_feats/*
