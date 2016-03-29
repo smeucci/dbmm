@@ -16,7 +16,7 @@ END_IDX = str2double(config.END_IDX);
 %% Load list of identities
 
 if strcmp(config.USE_MATFILE, 'true')
-    load([config.DATA_PATH, 'data/', 'identities.mat']);
+    load([config.DATA_PATH, 'data/identities.mat']);
 else
     fid = fopen([config.DATA_PATH, 'data/identities.txt'], 'r');
     identities = textscan(fid, '%s', 'Delimiter', '\n');
