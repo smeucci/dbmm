@@ -2,21 +2,42 @@
 %clear;
 clc;
 
-%start timer
+%% start timer
+
 start_time = clock;
 
 %% Load config file
-config = readconf('config/config.conf');
 
+config = readconf('config/config.conf');
 START_IDX = str2double(config.START_IDX);
 END_IDX = str2double(config.END_IDX);
 
 
 %% Load list of identities
+
 if strcmp(config.USE_MATFILE, 'true')
     load([config.DATA_PATH, 'data/', 'identities.mat']);
 else
-    %do something
+    fid = fopen([config.DATA_PATH, 'data/identities.txt'], 'r');
+    identities = textscan(fid, '%s', 'Delimiter', '\n');
+    identities = identities{1,1};
+    
+    for i = 1:size(identities, 1)
+        
+        label = ['n', sprintf('%08d', i)];
+        identity = strrep(identities{i, 1}, ' ', '_');
+        classes.description{i, 1} = identity;
+        classes.name{1, i} = label;
+        
+    end 
+end
+
+
+%% Inizialized databases and tables
+
+if strcmp(config.DB_INITIALIZE, 'true')
+    initialize = 'python -W ignore +python/initialize_databases.py';
+    system(initialize);
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
