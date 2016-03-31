@@ -34,7 +34,7 @@ function test_svm_cnn(DATA_PATH, start_idx, end_idx, start_time, config)
     end
 
     FEAT_LAYER = str2double(config.FEAT_LAYER);
-    NUM_OF_IMAGE_PER_CLASS_TRAIN = str2double(config.NUM_OF_IMAGE_PER_CLASS_TRAIN);
+    NUM_OF_IMAGES_PER_CLASS_TRAIN = str2double(config.NUM_OF_IMAGES_PER_CLASS_TRAIN);
     NUM_OF_VERSUS_IDENTITIES = str2double(config.NUM_OF_VERSUS_IDENTITIES);
     
     size_of_data_train = size(data_train, 2);
@@ -52,27 +52,27 @@ function test_svm_cnn(DATA_PATH, start_idx, end_idx, start_time, config)
         fprintf('Images classification of identity %s - %s\n', identity{2}, identity{1});
 
         %create tmp data_train related to the identity
-        end_ = i*NUM_OF_IMAGE_PER_CLASS_TRAIN;
-        begin_ = end_ - NUM_OF_IMAGE_PER_CLASS_TRAIN + 1;
+        end_ = i*NUM_OF_IMAGES_PER_CLASS_TRAIN;
+        begin_ = end_ - NUM_OF_IMAGES_PER_CLASS_TRAIN + 1;
 
         %select a random integer to determine a set of identities to be train
         %against the current identity i
         if end_ <= size_of_data_train/2
-           r = randi([end_+1, size_of_data_train-(NUM_OF_VERSUS_IDENTITIES*NUM_OF_IMAGE_PER_CLASS_TRAIN)], 1, 1);
+           r = randi([end_+1, size_of_data_train-(NUM_OF_VERSUS_IDENTITIES*NUM_OF_IMAGES_PER_CLASS_TRAIN)], 1, 1);
            % r = 11;
         else
-           r = randi([1, (size_of_data_train/2)-(NUM_OF_VERSUS_IDENTITIES*NUM_OF_IMAGE_PER_CLASS_TRAIN)], 1, 1);
+           r = randi([1, (size_of_data_train/2)-(NUM_OF_VERSUS_IDENTITIES*NUM_OF_IMAGES_PER_CLASS_TRAIN)], 1, 1);
            % r = 1;
         end
 
         
         %create descriptors 
         data_train_identity = data_train(begin_:end_);
-        data_train_versus = data_train(r:r+(NUM_OF_VERSUS_IDENTITIES*NUM_OF_IMAGE_PER_CLASS_TRAIN)-1);
+        data_train_versus = data_train(r:r+(NUM_OF_VERSUS_IDENTITIES*NUM_OF_IMAGES_PER_CLASS_TRAIN)-1);
 
         %create labels
-        label_identity = ones(NUM_OF_IMAGE_PER_CLASS_TRAIN,1);
-        label_versus = zeros(NUM_OF_VERSUS_IDENTITIES*NUM_OF_IMAGE_PER_CLASS_TRAIN,1);
+        label_identity = ones(NUM_OF_IMAGES_PER_CLASS_TRAIN,1);
+        label_versus = zeros(NUM_OF_VERSUS_IDENTITIES*NUM_OF_IMAGES_PER_CLASS_TRAIN,1);
 
         %create svm model
         desc_train = double(cat(1, data_train_identity.desc, data_train_versus.desc));

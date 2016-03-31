@@ -19,7 +19,7 @@ function train_svm_cnn(DATA_PATH, start_idx, end_idx, start_time, config)
     end
 
     FEAT_LAYER = str2double(config.FEAT_LAYER);
-    NUM_OF_IMAGE_PER_CLASS_TRAIN = str2double(config.NUM_OF_IMAGE_PER_CLASS_TRAIN);
+    NUM_OF_IMAGES_PER_CLASS_TRAIN = str2double(config.NUM_OF_IMAGES_PER_CLASS_TRAIN);
 
     %load pre trained net
     if ~exist('net','var')
@@ -60,7 +60,7 @@ function train_svm_cnn(DATA_PATH, start_idx, end_idx, start_time, config)
         %extract fc layer for each image
         %reverseStr = '';
         
-        for j = 1:NUM_OF_IMAGE_PER_CLASS_TRAIN
+        for j = 1:NUM_OF_IMAGES_PER_CLASS_TRAIN
             im_data = identity{3}(j);
             im_path = [identity_path, im_data.image];
             im = imread(im_path);
