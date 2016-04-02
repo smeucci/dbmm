@@ -13,8 +13,7 @@ PER FINIRE:
 - validare 100 identità delle 1000 e 100 del test
 - calcolare statistiche
 - definire variabili globali per il path per il sito
-
-
+- fare controllo sui nomi delle identità come avevo fatto nello script (unidecode ecc)
 
 
 
