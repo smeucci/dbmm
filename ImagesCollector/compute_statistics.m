@@ -1,4 +1,4 @@
-function compute_statistics()
+function [results] = compute_statistics()
 
     clc;
 
@@ -16,6 +16,7 @@ function compute_statistics()
     
     fprintf('Computing prediction statistics for %d identities of database "%s"\n', size(identities, 1), config.DATABASE_DATASET);
     
+    results = [];
     for i = 1:size(identities, 1)
         
         label = identities{i, 1};
@@ -51,26 +52,31 @@ function compute_statistics()
             
         end
         
-        identities{i, 4} = tp / tot;
-        identities{i, 5} = fp / tot;
-        identities{i, 6} = tn / tot;
-        identities{i, 7} = fn / tot;
-        identities{i, 8} = tp;
-        identities{i, 9} = fp;
-        identities{i, 10} = tn;
-        identities{i, 11} = fn;
-            
+        result.label = label;
+        result.name = identities{i, 2};
+        result.tpr = tp / tot;
+        result.fpr = fp / tot;
+        result.tnr = tn / tot;
+        result.fnr = fn / tot;
+        result.tp = tp;
+        result.fp = fp;
+        result.tn = tn;
+        result.fn = fn;
+        result.groundtruth = tp + fn;
+        
+        results = [results; result];
+        
     end
     
     tpr = 0; fpr = 0; tnr = 0; fnr = 0; tot_images_prediction = 0; tot_images_validation = 0;
-    for i = 1:size(identities, 1)
+    for i = 1:size(results, 1)
         
-        tpr = tpr + identities{i, 4};
-        fpr = fpr + identities{i, 5};
-        tnr = tnr + identities{i, 6};
-        fnr = fnr + identities{i, 7};
-        tot_images_prediction = tot_images_prediction + identities{i, 8};
-        tot_images_validation = tot_images_validation + identities{i, 3};
+        tpr = tpr + results(i).tpr;
+        fpr = fpr + results(i).fpr;
+        tnr = tnr + results(i).tnr;
+        fnr = fnr + results(i).fnr;
+        tot_images_prediction = tot_images_prediction + results(i).tp;
+        tot_images_validation = tot_images_validation + results(i).groundtruth;
         
     end
     
