@@ -87,13 +87,19 @@ function [results] = compute_statistics()
     tot_images_prediction = tot_images_prediction / size(identities, 1);
     tot_images_validation = tot_images_validation / size(identities, 1);
     
-    fprintf('\n- True positive rate: %.2f\n', tpr);
-    fprintf('- False positive rate: %.2f\n', fpr);
-    fprintf('- True negative rate: %.2f\n', tnr);
-    fprintf('- False negative rate: %.2f\n', fnr);
+    fprintf('\n- True positive on average: %.3f\n', tpr);
+    fprintf('- False positive on average: %.3f\n', fpr);
+    fprintf('- True negative on average: %.3f\n', tnr);
+    fprintf('- False negative on average: %.3f\n', fnr);
     
-    fprintf('\n- Correctly predicted: %.2f\n', tpr + tnr);
-    fprintf('- Not correctly predicted: %.2f\n', fpr + fnr);
+    %fprintf('\n- Correctly predicted on average: %.2f\n', tpr + tnr);
+    %fprintf('- Not correctly predicted on average: %.2f\n', fpr + fnr);
+    
+    fprintf('\n- Precision: %.3f\n', tpr / (tpr + fpr));
+    fprintf('- Recall: %.3f\n', tpr / (tpr + fnr));
+    
+    fprintf('\n- True negative rate: %.3f\n', tnr / (tnr + fpr));
+    fprintf('- Accuracy: %.3f\n', (tpr + tnr) / (tpr + tnr + fpr + fnr));
     
     fprintf('\n- Average number of images per identity after PREDICTION: %d\n', round(tot_images_prediction));
     fprintf('- Average number of images per identity after VALIDATION: %d\n', round(tot_images_validation));
