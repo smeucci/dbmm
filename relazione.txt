@@ -1,3 +1,6 @@
+ELABORATO DBMM
+
+
 RELAZIONE:
 - necessità di database grandi per cnn e difficoltà a trovare dataset gratuiti e/o difficoltà a creare dataset nuovi soprattutto l'operazione di annotazione
 - quindi creazione di pipeline per creazione di dataset già annotati
@@ -13,6 +16,13 @@ RELAZIONE:
 - infine validazione visuale tramite web interface
 - ottengo database grande annotato e pulito per cnn.
 
+- IMMAGINI:
+    - esempio immagini di download, pulita e con più facce e che non c'entra niente
+    - confronto immagine originale con quella dopo face detector, mostrare anche immagine originale con disegnata bounding box allargata
+    - esempio di due duplicati che non si rimuovono perchè immagini originali troppo diverse anche se mostrano lo stesso contenuto
+    - mostrare immagine originale con disegnata bounding box originale usata per la classificazione
+    - mostrare il tool web per la validazione, sia per la classificazione che per la validazione
+    - grafici, tabelle per la parte di validazione
 
 
 - INTRODUZIONE
@@ -46,7 +56,6 @@ Per risolvere questi errori, e per valutare la precisione di questa procedura, �
 - ESPERIMENTI
 Per verificare la bontà di tale procedura sono stati fatti esperimenti con due diversi insiemi di dataset. Una contente identità quali celebrità, attori etc l'altro contente identità come calciatori. Le prime erano una selezione delle identità con cui la rete usa per estrarre il classificatore era stata addestrata.
 Per verificare la precisione della classificazione sono state prese 50 identità del primo insieme e 50 dal secondo. Sono state eseguite tutte le fasi della procedura fino alla classificazione. Infine è stata effettuata la parte di validazione visuale tramite l'interfaccia web creata. Sfruttando così la validazione è stato possibile creare un groundtruth contro il quale confrontare i risultatai della procedura automatica fino alla classificazione. I risultati ottenuto sono promettenete (mostrare e rifare etc).
-
 
 - CONCLUSIONE
 La procedura implementa mostra risultati promettenti. Tuttavia ci sono diverse questioni da discutere ed aspetti da migliorare.
