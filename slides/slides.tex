@@ -1,0 +1,37 @@
+\documentclass{beamer}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{mathtools}
+\usetheme[titlepagelogo=firenze,% Logo for the first page
+		  language=italian,
+		  bullet=circle,
+		  color=blue,
+         ]{TorinoTh}
+\usepackage[beamer,customcolors]{hf-tikz}
+\definecolor{UniBlue}{RGB}{83,121,170}
+\uselanguage{italian}
+\languagepath{italian}
+\setbeamercolor{block title}{use=structure,fg=white,bg=UniBlue}
+\setbeamercolor{block body}{use=structure,fg=black,bg=white}
+
+\author{}
+\rel{{\normalsize \emph{Basi di Dati Multimediali}}\\\vspace{0.3cm}Saverio Meucci}
+\title{\huge CCN for Automatic Data Collection and Filtering}
+%\date{28 Giugno 2016}
+
+\begin{document}
+
+\titlepageframe
+
+\input{intro}
+\input{collector}
+\input{downloader}
+\input{face_detector}
+\input{duplicate_removal}
+\input{classification}
+\input{validation}
+\input{results}
+\input{conclusions}
+
+
+\end{document}

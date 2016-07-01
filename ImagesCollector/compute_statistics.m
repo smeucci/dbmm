@@ -54,10 +54,6 @@ function [results] = compute_statistics()
         
         result.label = label;
         result.name = identities{i, 2};
-        result.tpr = tp / tot;
-        result.fpr = fp / tot;
-        result.tnr = tn / tot;
-        result.fnr = fn / tot;
         result.tp = tp;
         result.fp = fp;
         result.tn = tn;
@@ -68,38 +64,40 @@ function [results] = compute_statistics()
         
     end
     
-    tpr = 0; fpr = 0; tnr = 0; fnr = 0; tot_images_prediction = 0; tot_images_validation = 0;
+    tps = 0; fps = 0; tns = 0; fns = 0; tot_images_prediction = 0; tot_images_validation = 0;
     for i = 1:size(results, 1)
         
-        tpr = tpr + results(i).tpr;
-        fpr = fpr + results(i).fpr;
-        tnr = tnr + results(i).tnr;
-        fnr = fnr + results(i).fnr;
+        tps = tps + results(i).tp;
+        fps = fps + results(i).fp;
+        tns = tns + results(i).tn;
+        fns = fns + results(i).fn;
+        
         tot_images_prediction = tot_images_prediction + results(i).tp;
         tot_images_validation = tot_images_validation + results(i).groundtruth;
         
     end
     
-    tpr = tpr / size(identities, 1);
-    fpr = fpr / size(identities, 1);
-    tnr = tnr / size(identities, 1);
-    fnr = fnr / size(identities, 1);
+    TPR = tps / (tps + fns);
+    TNR = tns / (fps + tns);
+    FPR = fps / (fps + tns);
+    FNR = fns / (fns + tps);
+    ACCURACY = (tps + tns) / (tps + tns + fps + fns);
+    PRECISION = tps / (tps + fps);
+    RECALL = tps / (tps + fns);
+   
     tot_images_prediction = tot_images_prediction / size(identities, 1);
     tot_images_validation = tot_images_validation / size(identities, 1);
     
-    fprintf('\n- True positive on average: %.3f\n', tpr);
-    fprintf('- False positive on average: %.3f\n', fpr);
-    fprintf('- True negative on average: %.3f\n', tnr);
-    fprintf('- False negative on average: %.3f\n', fnr);
-    
+    fprintf('\n- True positive rate: %.3f\n', TPR);
+    fprintf('- True negative rate: %.3f\n', TNR);
+    fprintf('- False positive rate: %.3f\n', FPR);
+    fprintf('- False negative rate: %.3f\n', FNR);
+    fprintf('- Accuracy: %.3f\n', ACCURACY);
+    fprintf('\n- Precision: %.3f\n', PRECISION);
+    fprintf('- Recall: %.3f\n', RECALL);
+
     %fprintf('\n- Correctly predicted on average: %.2f\n', tpr + tnr);
-    %fprintf('- Not correctly predicted on average: %.2f\n', fpr + fnr);
-    
-    fprintf('\n- Precision: %.3f\n', tpr / (tpr + fpr));
-    fprintf('- Recall: %.3f\n', tpr / (tpr + fnr));
-    
-    fprintf('\n- True negative rate: %.3f\n', tnr / (tnr + fpr));
-    fprintf('- Accuracy: %.3f\n', (tpr + tnr) / (tpr + tnr + fpr + fnr));
+    %fprintf('- Not correctly predicted on average: %.2f\n', fpr + fnr);    
     
     fprintf('\n- Average number of images per identity after PREDICTION: %d\n', round(tot_images_prediction));
     fprintf('- Average number of images per identity after VALIDATION: %d\n', round(tot_images_validation));

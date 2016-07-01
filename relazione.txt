@@ -24,6 +24,12 @@ RELAZIONE:
     - mostrare il tool web per la validazione, sia per la classificazione che per la validazione
     - grafici, tabelle per la parte di validazione
 
+- REFERENCES:
+    - articolo fonte
+    - libsvm
+    - matconvet
+    - vlfeat
+    - dlib
 
 - INTRODUZIONE
 Le moderne reti neurali convoluzionali (CNNs) mostrano sempre più successi promettenti. Tuttavia per addestrarle e farle rendere al meglio, esse richiedono di una quantità di dati enormi per essere addestrate. Acquisire tali quantità di dati non è semplice: molti dataset di tali dimensioni sono a pagamento; inoltre creare da zero una dataset da milioni di contenuti (es. immagini) richiede uno sforzo notevole, non solo in termini di acquisizione del materiale, ma anche dal punto di vista dell'annotazione, ovvero dalla creazione di un groundtruth, fondamentale per qualsiasi tecnica di training dei dati. Questo aspetto spesso rappresenta un collo di bottiglia nella ricerca in questo ambito, dove solo laboratori di ricerca con importanti risorse possono permettersi di creare dataset di tali dimensioni e quindi ottenere risultati ed esperimenti che siano significativi in tale ambito, non essendo elevato il numero di dataset di grandi dimensioni resi pubblici. L'obiettivo di questo elaborato è la creazione di una procedura grazie alla quale è possibile ottenere un dataset di grandi dimensioni, sfruttando le risorse dei motori di ricerca, e allo stesso tempo ridurre al minimo il tempo umano necessario all'acquisizione delle immagini e all'annotazione delle stesse tale varie fasi di collezioni delle risorse e di pulizia e classificazione delle stesse, lasciando all'utente umano solo la fase finale di validazione dei risultati automaticamente ottenuti. Quindi tale pipeline, procedura, si divide in due fasi fondamentali: creazione del dataset, ovvero acquisizione delle immagini, e validazione del dataset, ovvero validazione visuale dei risultati ottenuti automaticamente al fine di pulire e rendere utilizzabile il dataset ottenuto. La procedura creata si occupa in particolare della creazione di dataset di immagini contenenti facce.
