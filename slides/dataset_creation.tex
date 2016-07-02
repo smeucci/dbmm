@@ -1,0 +1,46 @@
+\begin{tframe}{Dataset Creation}
+
+The phase for the \textbf{dataset creation} consists in the acquisition of images exploiting the modern \textit{image search engines}.
+
+\vspace{0.1in}
+
+It is necessary to decide a list of \textbf{identities} that are sufficiently popular, so that for each identity there will be a high number of images, between 500 and 1000) as results of the search engines.
+
+\vspace{0.1in}
+
+The acquisition procedure is divided in two parts: 
+
+\begin{itemize}
+\item A collection phase.
+\item A download phase.
+\end{itemize}
+
+\end{tframe}
+
+
+\begin{tframe}{Collection}
+
+The \textbf{collection} phase takes advantage of three search engines, such as Bing, Yahoo and AOL, to query and obtain images for each identity.
+
+\vspace{0.1in}
+
+Each HTML page returned contains the links to the images related to the query. Because every search engine has a different layout for the returned HTML pages and a different way of presenting the links in the pages, it is necessary to implement a \textbf{parser} for every search engine used.
+
+\vspace{0.1in}
+
+The links are then saved in the database with information about the related identity, the search engine used and the rank of the result.
+
+\end{tframe}
+
+
+\begin{tframe}{Download}
+
+
+The \textbf{download} phase takes place once the database of links have been created. 
+
+\vspace{0.1in}
+
+The procedure is straight forward: the images are downloaded and saved in a folder related to the identity, using the links obtained in the previous step.
+
+
+\end{tframe}

@@ -1,4 +1,40 @@
 \begin{tframe}{Conclusions}
 
+The implemented procedure works as follows. 
+
+\vspace{0.1in}
+
+For each identity, the images are \textbf{downloaded} from selected search engines. 
+
+\vspace{0.1in}
+
+A \textbf{face detector} is used to detect the faces contained in the images.
+
+\vspace{0.1in}
+
+A \textbf{duplicate removal} method is used to removed images that are duplicate.
+
+\vspace{0.1in}
+
+Using a \textbf{pre-trained CNN}, feature vectors are computed for each image and \textbf{linear SVM} is trained for each identity in order to remove the images that do not belong to that identity.
+
+\vspace{0.1in}
+
+Finally, the results of the classification are validated and corrected by an user thanks to a \textbf{web application} specifically developed for this purpose.
+
+\end{tframe}
+
+
+\begin{tframe}{Conclusions}
+
+However, there are some \textbf{problems} that need to be addressed:
+
+\begin{itemize}
+\item The collection phase is not reliable.
+\item The duplicate removal phase is only able to remove perfect duplicate.
+\item Having more than one faces in an image can lead to a training set for the classification that contains error, negatively affecting the computed model.
+\item An identity can have a name that leads to bad results in the search.
+\item The whole procedure is quite slow especially for the classification phase and for the visual validation.
+\end{itemize}
 
 \end{tframe}

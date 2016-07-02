@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2015.4.19)  1 JUL 2016 11:11
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2015.4.19)  2 JUL 2016 13:13
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1024,7 +1024,20 @@ Package: xparse 2013/12/31 v4634 L3 Experimental document command parser
 . D(){\belowrightoff } D(){\aboveleftoff }' on line 455.
 .................................................
 )
-(./slides.aux)
+(./slides.aux
+
+LaTeX Warning: Label `fig:validation' multiply defined.
+
+
+LaTeX Warning: Label `fig:validation' multiply defined.
+
+
+LaTeX Warning: Label `fig:validation' multiply defined.
+
+
+LaTeX Warning: Label `fig:validation' multiply defined.
+
+)
 \openout1 = `slides.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 22.
@@ -1237,27 +1250,125 @@ LaTeX Font Warning: Font shape `OT1/cmss/m/sc' in size <9> not available
 (./intro.tex
 
 LaTeX Font Warning: Font shape `OT1/cmss/m/n' in size <4> not available
-(Font)              size <5> substituted on input line 4.
+(Font)              size <5> substituted on input line 9.
 
 [2
 
-]) (./collector.tex [3
+] [3
 
-]) (./downloader.tex [4
+]) (./dataset_creation.tex [4
 
-]) (./face_detector.tex [5
+] [5
 
-])
-(./duplicate_removal.tex [6
+] [6
 
-]) (./classification.tex [7
+]) (./face_detector.tex [7
+
+] [8
+
+]
+<images/image3.jpg, id=96, 304.13625pt x 401.5pt>
+File: images/image3.jpg Graphic file (type jpg)
+ <use images/image3.jpg>
+Package pdftex.def Info: images/image3.jpg used on input line 41.
+(pdftex.def)             Requested size: 126.73734pt x 167.30554pt.
+
+Overfull \vbox (19.53088pt too high) detected at line 41
+ []
+
+[9
+
+ <./images/image3.jpg>]) (./duplicate_removal.tex [10
+
+] [11
+
+]
+<images/image6.png, id=122, 520.94624pt x 471.7625pt>
+File: images/image6.png Graphic file (type png)
+ <use images/image6.png>
+Package pdftex.def Info: images/image6.png used on input line 46.
+(pdftex.def)             Requested size: 174.26747pt x 157.81285pt.
+pdfTeX warning (ext4): destination with the same identifier (name{fig:validatio
+n}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.46 \end{tframe}
+                 
+Overfull \vbox (23.98264pt too high) detected at line 46
+ []
+
+[12
+
+ <./images/image6.png>]) (./classification.tex [13
+
+] [14
 
 ]) (./validation.tex
-[8
+[15
 
-]) (./results.tex [9
+] <images/image1a.jpg, id=157, 418.56375pt x 375.4025pt>
+File: images/image1a.jpg Graphic file (type jpg)
 
-]) (./conclusions.tex [10
+<use images/image1a.jpg>
+Package pdftex.def Info: images/image1a.jpg used on input line 26.
+(pdftex.def)             Requested size: 174.26747pt x 156.29321pt.
+pdfTeX warning (ext4): destination with the same identifier (name{fig:validatio
+n}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.26 \end{tframe}
+                 
+Overfull \vbox (8.51855pt too high) detected at line 26
+ []
+
+[16
+
+ <./images/image1a.jpg>]
+<images/image2a.jpg, id=166, 352.31625pt x 257.96375pt>
+File: images/image2a.jpg Graphic file (type jpg)
+
+<use images/image2a.jpg>
+Package pdftex.def Info: images/image2a.jpg used on input line 39.
+(pdftex.def)             Requested size: 174.26747pt x 127.596pt.
+pdfTeX warning (ext4): destination with the same identifier (name{fig:validatio
+n}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.39 \end{tframe}
+                  [17
+
+ <./images/image2a.jpg>] [18
+
+]
+<images/image5.png, id=183, 1359.0775pt x 604.2575pt>
+File: images/image5.png Graphic file (type png)
+ <use images/image5.png>
+Package pdftex.def Info: images/image5.png used on input line 71.
+(pdftex.def)             Requested size: 316.84819pt x 140.86644pt.
+pdfTeX warning (ext4): destination with the same identifier (name{fig:validatio
+n}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.71 \end{tframe}
+                  [19
+
+ <./images/image5.png>]) (./results.tex [20
+
+] [21
+
+])
+(./conclusions.tex
+Overfull \vbox (2.69174pt too high) detected at line 25
+ []
+
+[22
+
+] [23
+
+]) (./references.tex
+(/usr/share/texlive/texmf-dist/tex/latex/ucs/data/uni-32.def
+File: uni-32.def 2013/05/13 UCS: Unicode data U+2000..U+20FF
+) [24
 
 ])
 \tf@nav=\write6
@@ -1271,7 +1382,8 @@ LaTeX Font Warning: Font shape `OT1/cmss/m/n' in size <4> not available
 
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 37.
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 37.
- (./slides.aux)
+
+(./slides.aux)
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 37.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 37.
 Package rerunfilecheck Info: File `slides.out' has not changed.
@@ -1281,26 +1393,31 @@ Package rerunfilecheck Info: File `slides.out' has not changed.
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 1.0pt have occurred.
 
+
+LaTeX Warning: There were multiply-defined labels.
+
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 37.
  ) 
 Here is how much of TeX's memory you used:
- 25048 strings out of 494976
- 481707 string characters out of 6180006
- 563122 words of memory out of 5000000
- 27643 multiletter control sequences out of 15000+600000
- 12456 words of font info for 45 fonts, out of 8000000 for 9000
+ 25468 strings out of 494976
+ 487266 string characters out of 6180006
+ 565209 words of memory out of 5000000
+ 28022 multiletter control sequences out of 15000+600000
+ 16112 words of font info for 59 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
  50i,17n,53p,10446b,672s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb></u
-sr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmss12.pfb></usr/sha
-re/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmss17.pfb></usr/share/tex
-live/texmf-dist/fonts/type1/public/amsfonts/cm/cmss9.pfb></usr/share/texlive/te
-xmf-dist/fonts/type1/public/amsfonts/cm/cmssbx10.pfb></usr/share/texlive/texmf-
-dist/fonts/type1/public/amsfonts/cm/cmssi10.pfb>
-Output written on slides.pdf (10 pages, 161520 bytes).
+sr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></usr/sha
+re/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmss12.pfb></usr/share/tex
+live/texmf-dist/fonts/type1/public/amsfonts/cm/cmss17.pfb></usr/share/texlive/t
+exmf-dist/fonts/type1/public/amsfonts/cm/cmss9.pfb></usr/share/texlive/texmf-di
+st/fonts/type1/public/amsfonts/cm/cmssbx10.pfb></usr/share/texlive/texmf-dist/f
+onts/type1/public/amsfonts/cm/cmssi10.pfb></usr/share/texlive/texmf-dist/fonts/
+type1/public/amsfonts/cm/cmsy10.pfb>
+Output written on slides.pdf (24 pages, 1598799 bytes).
 PDF statistics:
- 136 PDF objects out of 1000 (max. 8388607)
- 99 compressed objects within 1 object stream
- 20 named destinations out of 1000 (max. 500000)
- 88 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 274 PDF objects out of 1000 (max. 8388607)
+ 214 compressed objects within 3 object streams
+ 50 named destinations out of 1000 (max. 500000)
+ 113 words of extra memory for PDF output out of 10000 (max. 10000000)
 

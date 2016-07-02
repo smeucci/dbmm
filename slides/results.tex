@@ -1,4 +1,39 @@
 \begin{tframe}{Results}
 
+To evaluate the performance of this procedure, \textbf{experiments} have been performed with two different datasets:
+
+\vspace{0.1in}
+
+One dataset (test A) contains 50 identities, such as \textbf{celebrities} and \textbf{actors}, the other (test B) contains 50 identities, such as \textbf{football players}. 
+
+\vspace{0.1in}
+
+The identities for the first dataset are a selection of the ones used by the pre-trained CNN that was used to extract the feature vectors for the images.
+
+\end{tframe}
+
+
+\begin{tframe}{Results}
+
+Using the \textbf{ground-truth} created by the validation phase, it was possible to compare the results of the automatic classification.
+
+\begin{table}[ht]
+\caption{Accuratezza del clustering}
+\centering % used for centering table
+\begin{tabular}{c c c c c c} % centered columns (4 columns)
+\hline\hline %inserts double horizontal lines
+Test & TPR & TNR & FPR & FNR & Accuracy \\ [0.5ex] % inserts table
+%heading
+\hline % inserts single horizontal line
+A & 0,993 & 0,874 & 0,126 & 0,007 & 0,973 \\
+B & 0,978 & 0,839 & 0,161 & 0,022 & 0,952 \\ [1ex] % [1ex] adds vertical space
+\hline %inserts single line
+\end{tabular}
+\label{table:nonlin} % is used to refer this table in the text
+\end{table}
+
+\vspace{0.1in}
+
+The average number of images per identity for the \textbf{prediction} is 409 for test A and 439 for test B; the average number of images per identity after the \textbf{validation} is 412 for test A and 448 for test B.
 
 \end{tframe}
