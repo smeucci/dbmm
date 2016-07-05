@@ -1,7 +1,10 @@
-function remove_duplicate(DATA_PATH, start_idx, end_idx, start_time)
+function remove_duplicate(DATA_PATH, start_idx, end_idx, start_time, config)
 % REMOVE_DUPLICATE removes duplicated images from the dataset
 
     warning off MATLAB:dispatcher:nameConflict;
+    
+    addpath(genpath(config.VLFEAT_PATH));
+    vl_setup;
     
     fprintf('Loading dataset..\n');
     d = load([DATA_PATH, 'data/dataset.mat']);
@@ -47,7 +50,8 @@ function remove_duplicate(DATA_PATH, start_idx, end_idx, start_time)
             end
             
             %extract local features using sift
-            [f,d] = lib.vlfeat.vl_sift(im_crop);
+            %[f,d] = lib.vlfeat.vl_sift(im_crop);
+            [f,d] = vl_sift(im_crop);
             identity{3}(j).descriptor = single(d);
 
         end
@@ -56,20 +60,24 @@ function remove_duplicate(DATA_PATH, start_idx, end_idx, start_time)
         fprintf('Generating codebook..%s- %s\n', identity{1}, identity{2});
         %vl_setup;
         dataLearn = cat(2, identity{3}.descriptor);
-        centers = lib.vlfeat.vl_kmeans(dataLearn, numClusters);
-        kdtree = lib.vlfeat.vl_kdtreebuild(centers) ;
+        %centers = lib.vlfeat.vl_kmeans(dataLearn, numClusters);
+        %kdtree = lib.vlfeat.vl_kdtreebuild(centers);
+        centers = vl_kmeans(dataLearn, numClusters);
+        kdtree = vl_kdtreebuild(centers);
         
         %create descriptor for each image using vlad encoding
         fprintf('Encoding %s - %s..\n', identity{1}, identity{2});
         for j = 1:size(identity{3}, 2)
             
             dataToBeEncoded = identity{3}(j).descriptor;
-            nn = lib.vlfeat.vl_kdtreequery(kdtree, centers, dataToBeEncoded) ;
+            %nn = lib.vlfeat.vl_kdtreequery(kdtree, centers, dataToBeEncoded);
+            nn = vl_kdtreequery(kdtree, centers, dataToBeEncoded);
 
             numDataToBeEncoded = size(dataToBeEncoded, 2);
             assignments = single(zeros(numClusters,numDataToBeEncoded));
             assignments(sub2ind(size(assignments), nn, 1:length(nn))) = 1;
-            enc = lib.vlfeat.vl_vlad(dataToBeEncoded,centers,assignments);
+            %enc = lib.vlfeat.vl_vlad(dataToBeEncoded,centers,assignments);
+            enc = vl_vlad(dataToBeEncoded,centers,assignments);
             identity{3}(j).descriptor = enc;
             
         end
@@ -77,7 +85,8 @@ function remove_duplicate(DATA_PATH, start_idx, end_idx, start_time)
         %clustering images descriptor to see which images are the same
         fprintf('Clustering images %s - %s..\n', identity{1}, identity{2});
         dataEncoded = cat(2, identity{3}.descriptor);
-        centers = lib.vlfeat.vl_kmeans(dataEncoded, size(identity{3}, 2));
+        %centers = lib.vlfeat.vl_kmeans(dataEncoded, size(identity{3}, 2));
+        centers = vl_kmeans(dataEncoded, size(identity{3}, 2));
         dmat = eucliddist(dataEncoded', centers');
 
         for h = 1:size(dmat, 2)

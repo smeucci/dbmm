@@ -7,3 +7,7 @@
 /ImagesCollector/config/config.conf
 /ImagesCollector/.project
 /ImagesCollector/.pydevproject
+
+/libsvm
+/vlfeat
+/matconvnet

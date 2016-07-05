@@ -5,7 +5,8 @@ function test_svm_cnn(DATA_PATH, start_idx, end_idx, start_time, config)
     %warning off MATLAB:colon:nonIntegerIndex;
     warning off;
 
-    addpath(genpath(config.MATCONVENT_PATH));
+    addpath(genpath(config.MATCONVNET_PATH));
+    addpath(genpath(config.LIBSVM_PATH));
     vl_setupnn;
     
     %load dataset
@@ -55,21 +56,19 @@ function test_svm_cnn(DATA_PATH, start_idx, end_idx, start_time, config)
         end_ = i*NUM_OF_IMAGES_PER_CLASS_TRAIN;
         begin_ = end_ - NUM_OF_IMAGES_PER_CLASS_TRAIN + 1;
 
-        %select a random integer to determine a set of identities to be train
-        %against the current identity i
-        if end_ <= size_of_data_train/2
-           r = randi([end_+1, size_of_data_train-(NUM_OF_VERSUS_IDENTITIES*NUM_OF_IMAGES_PER_CLASS_TRAIN)], 1, 1);
-           % r = 11;
-        else
-           r = randi([1, (size_of_data_train/2)-(NUM_OF_VERSUS_IDENTITIES*NUM_OF_IMAGES_PER_CLASS_TRAIN)], 1, 1);
-           % r = 1;
-        end
+       
+       
 
         
         %create descriptors 
         data_train_identity = data_train(begin_:end_);
-        data_train_versus = data_train(r:r+(NUM_OF_VERSUS_IDENTITIES*NUM_OF_IMAGES_PER_CLASS_TRAIN)-1);
-
+        
+        if end_ <= size_of_data_train/2
+            data_train_versus = data_train(end_ + 1:end_+ 1 + (NUM_OF_VERSUS_IDENTITIES*NUM_OF_IMAGES_PER_CLASS_TRAIN)-1);
+        else
+            data_train_versus = data_train((end_ - NUM_OF_IMAGES_PER_CLASS_TRAIN) - (NUM_OF_VERSUS_IDENTITIES*NUM_OF_IMAGES_PER_CLASS_TRAIN) + 1:end_ - NUM_OF_IMAGES_PER_CLASS_TRAIN);
+        end
+        
         %create labels
         label_identity = ones(NUM_OF_IMAGES_PER_CLASS_TRAIN,1);
         label_versus = zeros(NUM_OF_VERSUS_IDENTITIES*NUM_OF_IMAGES_PER_CLASS_TRAIN,1);
@@ -79,7 +78,7 @@ function test_svm_cnn(DATA_PATH, start_idx, end_idx, start_time, config)
         labels_train = cat(1, label_identity, label_versus);
 
         fprintf('Creating svm model\n');
-        model = lib.libsvm.svmtrain(labels_train, desc_train, '-t 0 -c 1');
+        model = svmtrain(labels_train, desc_train, '-t 0 -c 1');
 
         data_test = [];
         tot = 0;
@@ -104,7 +103,7 @@ function test_svm_cnn(DATA_PATH, start_idx, end_idx, start_time, config)
             feature = squeeze(res(FEAT_LAYER).x)';
 
             % predict the class of the image using a pre-computed svm model.
-            [output, predicted_label] = evalc('lib.libsvm.svmpredict(i, double(feature), model)');
+            [output, predicted_label] = evalc('svmpredict(i, double(feature), model)');
 
             % save result as struct.
             data_test(index).image = im_data.image;

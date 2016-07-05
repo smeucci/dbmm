@@ -79,7 +79,7 @@ end
 
 if strcmp(config.DO_REMOVE, 'true')
     
-    remove_duplicate(config.DATA_PATH, START_IDX, END_IDX, start_time);
+    remove_duplicate(config.DATA_PATH, START_IDX, END_IDX, start_time, config);
     
 end
 

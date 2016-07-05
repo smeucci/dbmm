@@ -90,11 +90,11 @@ def search(identity, num_of_imgs):
     if not queue.empty():
         queue_size = queue.qsize()
         insert_urls(queue, identity, queue_size)
-        print 'Donwload terminated for identity: ' + identity['name'] + ' - Number of images: ' \
+        print 'Collector terminated for identity: ' + identity['name'] + ' - Number of images: ' \
             + str(queue_size) + ' - Elapsed time: ' + str((timer() - start))
     else:
         update_identity_status(identity, 'ERR_F')
-        print 'Donwload terminated for identity: ' + identity['name'] + ' - Elapsed time: ' + str((timer() - start))     
+        print 'Collector terminated for identity: ' + identity['name'] + ' - Elapsed time: ' + str((timer() - start))     
         
 
 #FETCHER: choose which search engine to use
@@ -146,7 +146,7 @@ def fetcher_aol_1(queue, search_engine, data):
     #the proxy to use
     proxy_url = 'http://anonymouse.org/cgi-bin/anon-www.cgi/'
     
-    count = 20
+    count = 50
     rounds = int(math.ceil((data['num_of_imgs']) / count)) + 1
     second_half = int(math.ceil(rounds / 2))
     num = 1000 #needs to be bigger than count
@@ -176,7 +176,7 @@ def fetcher_aol_2(queue, search_engine, data):
     #the proxy to use
     proxy_url = 'http://anonymouse.org/cgi-bin/anon-www.cgi/'
     
-    count = 20
+    count = 50
     rounds = int(math.ceil((data['num_of_imgs']) / count)) + 1
     second_half = int(math.ceil(rounds / 2))
     num = 1000 #needs to be bigger than count
@@ -238,7 +238,6 @@ def parser(html, info, queue):
     switcher =  {
             'bing': parser_bing,
             'aol': parser_aol,
-            'duck': parser_duck,
             'yahoo': parser_yahoo
     }
     func = switcher.get(info['engine'])
@@ -406,6 +405,7 @@ def update_identity_urls(identity, queue_size):
 def insert_urls(queue, identity, queue_size):
     print identity['name'] + ' - Saving to db..'
     db = MySQLdb.connect(location, user, pwd, database)
+    print database
     cursor = db.cursor()
     rollback = False
     
@@ -421,7 +421,7 @@ def insert_urls(queue, identity, queue_size):
             INSERT INTO urls (id, label, identity, url, rank, engine) 
             VALUES (%s, %s, %s, %s, %s, %s)
         """, images)
-            
+    
         db.commit()
     except:
         db.rollback()

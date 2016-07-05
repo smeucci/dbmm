@@ -6,7 +6,7 @@ function train_svm_cnn(DATA_PATH, start_idx, end_idx, start_time, config)
     %warning off MATLAB:colon:nonIntegerIndex;
     warning off;
     
-    addpath(genpath(config.MATCONVENT_PATH));
+    addpath(genpath(config.MATCONVNET_PATH));
     vl_setupnn;
 
     %load dataset 
