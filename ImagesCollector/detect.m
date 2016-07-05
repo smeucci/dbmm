@@ -1,4 +1,4 @@
-function detect(classes, DATA_PATH, start_idx, end_idx, start_time)
+function detect(classes, DATA_PATH, start_idx, end_idx, start_time, config)
 % DETECT detects faces in the dataset of images using dlib
 
     %create dataset variable or load it
@@ -26,8 +26,9 @@ function detect(classes, DATA_PATH, start_idx, end_idx, start_time)
        index = 1;
        
        identity_path = [DATA_PATH, 'img/',  label, '_', identity, '/'];
-              
-       cmd = ['exec/./face_detector ', identity_path, '*/*.jpg'];
+       
+       %cmd = ['exec/./face_detector ', identity_path, '*/*.jpg'];
+       cmd = [config.DLIB_PATH, '/examples/build/./face_detector ', identity_path, '*/*.jpg'];
        [status, cmdout] = system(cmd);
        
        output = strsplit(cmdout, ';');

@@ -68,7 +68,7 @@ end
 
 if strcmp(config.DO_DETECT, 'true')
    
-   detect(classes, config.DATA_PATH, START_IDX, END_IDX, start_time);
+   detect(classes, config.DATA_PATH, START_IDX, END_IDX, start_time, config);
    
 end
 
