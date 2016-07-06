@@ -34,7 +34,7 @@ INSTALLATION GUIDE
    - MySQLdb and bs4 (BeautifulSoup) library for python.
    
    
-#### Setup
+#### SETUP
 
 1. Go to root_of_project/ImagesCollector/conf/, make a copy of proto.conf and call it config.conf.
 Then fill the parameters inside the configuration file.
@@ -42,7 +42,7 @@ Then fill the parameters inside the configuration file.
 2. Insert a list of identities (identities.mat or identities.txt) in DATA_PATH/data/.
 
 
-#### Web App
+#### WEB APP
 
 1. Copy the application to /var/www/.
 2. Configure database.php with the database called DATABASE_DATASET in config.conf.
