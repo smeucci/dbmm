@@ -7,10 +7,11 @@ function test_svm_cnn(DATA_PATH, start_idx, end_idx, start_time, config)
 
     addpath(genpath(config.MATCONVNET_PATH));
     addpath(genpath(config.LIBSVM_PATH));
+    addpath(genpath(config.VGG_FACE_MATCOVNET_PATH));
     vl_setupnn;
     
     %load dataset
-    if ~exist('net','var')
+    if ~exist('dataset','var')
         fprintf('Loading dataset\n');
         load([DATA_PATH, 'data/dataset.mat']);
         fprintf('Dataset loaded in %.2f s\n\n', etime(clock, start_time));
@@ -19,9 +20,10 @@ function test_svm_cnn(DATA_PATH, start_idx, end_idx, start_time, config)
     end
 
     %load pre trained net
-    if ~exist('net','var')
+    if ~exist('convNet', 'var')
         fprintf('Loading ConvNet\n\n');
-        net = load([DATA_PATH, 'data/vgg-face.mat']);
+        %load(config.VGG_FACE_PATH);
+        convNet = lib.face_feats.convNet('/data/vgg_face.mat');
     else
         fprintf('ConvNet already loaded\n\n');
     end
@@ -56,10 +58,6 @@ function test_svm_cnn(DATA_PATH, start_idx, end_idx, start_time, config)
         end_ = i*NUM_OF_IMAGES_PER_CLASS_TRAIN;
         begin_ = end_ - NUM_OF_IMAGES_PER_CLASS_TRAIN + 1;
 
-       
-       
-
-        
         %create descriptors 
         data_train_identity = data_train(begin_:end_);
         
@@ -97,9 +95,14 @@ function test_svm_cnn(DATA_PATH, start_idx, end_idx, start_time, config)
 
             % extract the fc layer of the pre-trained cnn as descriptor.
             im_ = single(crop);
-            im_ = imresize(im_, net.normalization.imageSize(1:2)) ;
-            im_ = bsxfun(@minus,im_,net.normalization.averageImage) ;
-            res = vl_simplenn(net, im_);
+            im_ = imresize(im_, convNet.net.normalization.imageSize(1:2));
+            
+            averageImage(:,:,1) = convNet.net.normalization.averageImage(1);
+            averageImage(:,:,2) = convNet.net.normalization.averageImage(2);
+            averageImage(:,:,3) = convNet.net.normalization.averageImage(3);
+            
+            im_ = bsxfun(@minus,im_, averageImage);
+            res = simpleNN_custom(convNet, im_);
             feature = squeeze(res(FEAT_LAYER).x)';
 
             % predict the class of the image using a pre-computed svm model.

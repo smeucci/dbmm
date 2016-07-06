@@ -3,6 +3,7 @@ function remove_duplicate(DATA_PATH, start_idx, end_idx, start_time, config)
 
     warning off MATLAB:dispatcher:nameConflict;
     
+    addpath(genpath(config.VGG_FACE_MATCOVNET_PATH));
     addpath(genpath(config.VLFEAT_PATH));
     vl_setup;
     

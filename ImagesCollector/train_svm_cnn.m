@@ -7,6 +7,7 @@ function train_svm_cnn(DATA_PATH, start_idx, end_idx, start_time, config)
     warning off;
     
     addpath(genpath(config.MATCONVNET_PATH));
+    addpath(genpath(config.VGG_FACE_MATCOVNET_PATH));
     vl_setupnn;
 
     %load dataset 
@@ -22,9 +23,10 @@ function train_svm_cnn(DATA_PATH, start_idx, end_idx, start_time, config)
     NUM_OF_IMAGES_PER_CLASS_TRAIN = str2double(config.NUM_OF_IMAGES_PER_CLASS_TRAIN);
 
     %load pre trained net
-    if ~exist('net','var')
+    if ~exist('convNet', 'var')
         fprintf('Loading ConvNet\n\n');
-        net = load([DATA_PATH, 'data/vgg-face.mat']);
+        %load(config.VGG_FACE_PATH);
+        convNet = lib.face_feats.convNet('/data/vgg_face.mat');
     else
         fprintf('ConvNet already loaded\n\n');
     end
@@ -68,9 +70,14 @@ function train_svm_cnn(DATA_PATH, start_idx, end_idx, start_time, config)
             crop = lib.face_proc.faceCrop.crop(im, det);
 
             im_ = single(crop);
-            im_ = imresize(im_, net.normalization.imageSize(1:2)) ;
-            im_ = bsxfun(@minus,im_,net.normalization.averageImage) ;
-            res = vl_simplenn(net, im_);
+            im_ = imresize(im_, convNet.net.normalization.imageSize(1:2));
+            
+            averageImage(:,:,1) = convNet.net.normalization.averageImage(1);
+            averageImage(:,:,2) = convNet.net.normalization.averageImage(2);
+            averageImage(:,:,3) = convNet.net.normalization.averageImage(3);
+            
+            im_ = bsxfun(@minus,im_, averageImage);
+            res = simpleNN_custom(convNet, im_);
             feature = squeeze(res(FEAT_LAYER).x);
 
             %saving result as struct

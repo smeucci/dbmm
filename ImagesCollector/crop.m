@@ -1,6 +1,8 @@
 function crop(DATA_PATH, start_time, config)
 % CROP crops the images of the dataset after the classification phase
 
+    addpath(genpath(config.VGG_FACE_MATCOVNET_PATH));
+
     %create folder img_validation
     img_folder = [DATA_PATH, 'img_crop/'];
     if ~exist(img_folder, 'dir')
