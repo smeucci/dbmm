@@ -26,7 +26,7 @@ INSTALLATION GUIDE
     cmake --build .
     ```
     
-5. Download the JDC driver from [LINK](http://dev.mysql.com/downloads/connector/j/) to be able to use Mysql with Matlab.
+5. Download the JDBC driver from [LINK](http://dev.mysql.com/downloads/connector/j/) to be able to use Mysql with Matlab.
    To install it, follow the instruction at [LINK](http://it.mathworks.com/products/database/driver-installation.html).
    
 6. Other dependencies:
