@@ -4,6 +4,7 @@
 +lib/*
 .DS_Store
 .conf~
+.md~
 
 /ImagesCollector/config/config.conf
 /ImagesCollector/.project
