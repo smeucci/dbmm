@@ -48,5 +48,5 @@ Then fill the parameters inside the configuration file.
 2. Configure database.php with the database called DATABASE_DATASET in config.conf.
 3. Make a symbolic link to the folder where the cropped images are, the same path used for DATA_PATH in config.conf:
     ```
-    ln DATA_PATH/img_crop/ /var/media/name_of_the_web_app/media
+    ln DATA_PATH/img_crop/ /var/www/name_of_the_web_app/media
     ```
