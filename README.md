@@ -14,11 +14,11 @@ INSTALLATION GUIDE
    
 3. Download VGG Face Matconvnet from [LINK](http://www.robots.ox.ac.uk/~vgg/software/vgg_face/).
    Move it to the root folder of the project and rename it vgg_face_matconvnet.
-   If the mex-file for your system are not present, copy the mex file for vl_nnconv and vl_nnpool from matconvnet/matlab/simplenn to vgg_face_matconvnet/+lib/+face_feats/@convNet/ .
+   If the mex-files for your system are not present, copy the mex-files for vl_nnconv and vl_nnpool from matconvnet/matlab/simplenn to vgg_face_matconvnet/+lib/+face_feats/@convNet/ .
    
 4. Download DLib from [LINK](http://dlib.net/).
    Move it to the root folder of the project and rename it dlib.
-   To compile it, first copy face_detector/face_detector.cpp to dlib/examples. Then go to dlib/examples/ with a terminal and run:
+   First copy face_detector/face_detector.cpp to dlib/examples. Then to compile it, go to dlib/examples/ with a terminal and run:
    ```
     mkdir build
     cd build
