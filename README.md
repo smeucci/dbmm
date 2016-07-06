@@ -1,5 +1,5 @@
 
-INSTALL GUIDE
+INSTALLATION GUIDE
 =============
 
 ### Dependencies
@@ -44,7 +44,7 @@ Then fill the parameters inside the configuration file.
 
 #### WEB APP
 
-1. Copy the application to /var/www.
+1. Copy the application to /var/www/.
 2. Configure database.php with the database called DATABASE_DATASET in config.conf.
 3. Make a symbolic link to the folder where the cropped images are, the same path used for DATA_PATH in config.conf:
     ```
