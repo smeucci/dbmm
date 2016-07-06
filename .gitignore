@@ -3,8 +3,8 @@
 .gitignore~
 +lib/*
 .DS_Store
-.conf~
-.md~
+*.conf~
+*.md~
 
 /ImagesCollector/config/config.conf
 /ImagesCollector/.project
