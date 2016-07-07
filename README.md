@@ -29,7 +29,7 @@ INSTALLATION GUIDE
     ```
     
 6. Download the JDBC driver from [LINK](http://dev.mysql.com/downloads/connector/j/) to be able to use Mysql with Matlab.
-   To install it, follow the instruction at [LINK](http://it.mathworks.com/products/database/driver-installation.html).
+   To install it, follow the instruction at [LINK](http://it.mathworks.com/products/database/driver-installation.html) and at [LINK](http://it.mathworks.com/help/database/ug/mysql-jdbc-linux.html).
    
 7. Other dependencies:
    - Stack LAMP.
