@@ -15,8 +15,10 @@ INSTALLATION GUIDE
 3. Download VGG Face Matconvnet from [LINK](http://www.robots.ox.ac.uk/~vgg/software/vgg_face/).
    Move it to the root folder of the project and rename it vgg_face_matconvnet.
    If the mex-files for your system are not present, copy the mex-files for vl_nnconv and vl_nnpool from matconvnet/matlab/simplenn to vgg_face_matconvnet/+lib/+face_feats/@convNet/ .
+
+4. Download VLFeat binary package (that already contains the compiled mex files) from [LINK](http://www.vlfeat.org/download.html).
    
-4. Download DLib from [LINK](http://dlib.net/).
+5. Download DLib from [LINK](http://dlib.net/).
    Move it to the root folder of the project and rename it dlib.
    First copy face_detector/face_detector.cpp to dlib/examples. Then to compile it, go to dlib/examples/ with a terminal and run:
    ```
@@ -26,10 +28,10 @@ INSTALLATION GUIDE
     cmake --build .
     ```
     
-5. Download the JDBC driver from [LINK](http://dev.mysql.com/downloads/connector/j/) to be able to use Mysql with Matlab.
+6. Download the JDBC driver from [LINK](http://dev.mysql.com/downloads/connector/j/) to be able to use Mysql with Matlab.
    To install it, follow the instruction at [LINK](http://it.mathworks.com/products/database/driver-installation.html).
    
-6. Other dependencies:
+7. Other dependencies:
    - Stack LAMP.
    - MySQLdb and bs4 (BeautifulSoup) library for python.
    
