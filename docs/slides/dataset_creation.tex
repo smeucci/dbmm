@@ -17,30 +17,24 @@ The acquisition procedure is divided in two parts:
 
 \end{tframe}
 
-
-\begin{tframe}{Collection}
+\begin{tframe}{Dataset Creation}
 
 The \textbf{collection} phase takes advantage of three search engines, such as Bing, Yahoo and AOL, to query and obtain images for each identity.
 
 \vspace{0.1in}
 
-Each HTML page returned contains the links to the images related to the query. Because every search engine has a different layout for the returned HTML pages and a different way of presenting the links in the pages, it is necessary to implement a \textbf{parser} for every search engine used.
+A query to an image search engine returns a HTML page; thanks to a parser, implemented for each search engine, we can obtain the links to the images contained in each HTML page.
 
-\vspace{0.1in}
+\begin{figure}[h]
+\centering
+\hspace*{\fill}
+\includegraphics[width=0.40\textwidth]{images/image8.png}
+\hspace*{\fill}
+\includegraphics[width=0.40\textwidth]{images/image11.png}
+\hspace*{\fill}
+\end{figure}
 
-The links are then saved in the database with information about the related identity, the search engine used and the rank of the result.
 
-\end{tframe}
-
-
-\begin{tframe}{Download}
-
-
-The \textbf{download} phase takes place once the database of links have been created. 
-
-\vspace{0.1in}
-
-The procedure is straight forward: the images are downloaded and saved in a folder related to the identity, using the links obtained in the previous step.
-
+The \textbf{download} phase is straight forward: the images are downloaded and saved in a folder related to the identity, using the links obtained in the previous step.
 
 \end{tframe}

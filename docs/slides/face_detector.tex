@@ -1,6 +1,10 @@
-\begin{tframe}{Face Detector}
 
-The successive phases have the objective of \textbf{filtering} the obtained dataset, in order to remove, for each identity, the images that are not relevant. 
+\begin{tframe}{Face Detector}
+\begin{tabular}{cl}  
+\begin{tabular}{l}
+\parbox{0.5\linewidth}{%  change the parbox width as appropiate
+
+The next phases have the objective of \textbf{filtering} the obtained dataset, in order to remove, for each identity, the images that are not relevant. 
 
 \vspace{0.1in}
 
@@ -10,6 +14,11 @@ The results of the queries to the image search engines for a specific identity, 
 
 Since the objective of this paper is the creation of datasets of images containing \textbf{faces}, we need to detect and select the faces in the retrieved images.
 
+}
+\end{tabular} & \begin{tabular}{c}
+\includegraphics[height=5cm, width=3.5cm]{images/image3.jpg}
+\end{tabular}  \\
+\end{tabular}
 \end{tframe}
 
 
@@ -25,17 +34,10 @@ The \textbf{Dlib} C++ library implements a face detector by using the classic \t
 
 The face detector takes an image, or list of images, and returns the coordinates of the \textbf{bounding box} surrounding the detected faces, which are then saved in the database.
 
-\end{tframe}
-
-
-\begin{tframe}{Face Detector}
-
 \begin{figure}[h]
 \begin{center}
-\includegraphics[width=0.4\textwidth]{images/image3.jpg}
+\includegraphics[width=0.7\textwidth]{images/hog.png}
 \end{center}
-  \caption{Example of a face found by the detector with its relative bounding box.}
-\label{fig:validation}
 \end{figure}
 
 \end{tframe}
