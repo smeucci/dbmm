@@ -12,7 +12,7 @@ The results of the queries to the image search engines for a specific identity, 
 
 \vspace{0.1in}
 
-Since the objective of this paper is the creation of datasets of images containing \textbf{faces}, we need to detect and select the faces in the retrieved images.
+Since the objective of this paper is the creation of a dataset of images of \textbf{faces}, we need to detect and select the faces in the retrieved images.
 
 }
 \end{tabular} & \begin{tabular}{c}
@@ -24,15 +24,15 @@ Since the objective of this paper is the creation of datasets of images containi
 
 \begin{tframe}{Face Detector}
 
-This task is accomplished implementing a \textbf{face detector}, written in C++ using the \textbf{Dlib} library [2]. 
+This task is accomplished by implementing a \textbf{face detector}, written in C++ using the \textbf{Dlib} library [2]. 
 
 \vspace{0.1in}
 
-The \textbf{Dlib} C++ library implements a face detector by using the classic \textbf{histogram of oriented gradients} (\textbf{HOG}) feature combined with a linear classifier, an image pyramid and sliding window detection scheme.
+The \textbf{Dlib} C++ library implements a face detector by using the classic \textbf{histogram of oriented gradients} (\textbf{HOG}) [6] feature combined with a linear classifier, an image pyramid and sliding window detection scheme.
 
 \vspace{0.1in}
 
-The face detector takes an image, or list of images, and returns the coordinates of the \textbf{bounding box} surrounding the detected faces, which are then saved in the database.
+The face detector takes an image, or list of images, and returns the coordinates of the \textbf{bounding boxes} surrounding the detected faces.
 
 \begin{figure}[h]
 \begin{center}

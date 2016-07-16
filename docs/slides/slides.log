@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2015.4.19)  12 JUL 2016 12:38
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2015.4.19)  16 JUL 2016 11:34
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1290,7 +1290,7 @@ File: images/hog.png Graphic file (type png)
 Package pdftex.def Info: images/hog.png used on input line 43.
 (pdftex.def)             Requested size: 221.79276pt x 110.89253pt.
 
-Overfull \vbox (35.14772pt too high) detected at line 43
+Overfull \vbox (24.89772pt too high) detected at line 43
  []
 
 [7
@@ -1390,26 +1390,25 @@ LaTeX Font Warning: Size substitutions with differences
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 38.
  ) 
 Here is how much of TeX's memory you used:
- 25461 strings out of 494976
- 487450 string characters out of 6180006
- 565146 words of memory out of 5000000
- 28023 multiletter control sequences out of 15000+600000
+ 25444 strings out of 494976
+ 487014 string characters out of 6180006
+ 565147 words of memory out of 5000000
+ 28006 multiletter control sequences out of 15000+600000
  14271 words of font info for 52 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
  50i,17n,53p,10446b,676s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb></u
-sr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></usr/sha
-re/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmss12.pfb></usr/share/tex
-live/texmf-dist/fonts/type1/public/amsfonts/cm/cmss17.pfb></usr/share/texlive/t
-exmf-dist/fonts/type1/public/amsfonts/cm/cmss9.pfb></usr/share/texlive/texmf-di
-st/fonts/type1/public/amsfonts/cm/cmssbx10.pfb></usr/share/texlive/texmf-dist/f
-onts/type1/public/amsfonts/cm/cmssi10.pfb></usr/share/texlive/texmf-dist/fonts/
-type1/public/amsfonts/cm/cmssi9.pfb></usr/share/texlive/texmf-dist/fonts/type1/
-public/amsfonts/cm/cmsy10.pfb>
-Output written on slides.pdf (17 pages, 4863507 bytes).
+sr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmss12.pfb></usr/sha
+re/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmss17.pfb></usr/share/tex
+live/texmf-dist/fonts/type1/public/amsfonts/cm/cmss9.pfb></usr/share/texlive/te
+xmf-dist/fonts/type1/public/amsfonts/cm/cmssbx10.pfb></usr/share/texlive/texmf-
+dist/fonts/type1/public/amsfonts/cm/cmssi10.pfb></usr/share/texlive/texmf-dist/
+fonts/type1/public/amsfonts/cm/cmssi9.pfb></usr/share/texlive/texmf-dist/fonts/
+type1/public/amsfonts/cm/cmsy10.pfb>
+Output written on slides.pdf (17 pages, 4854476 bytes).
 PDF statistics:
- 224 PDF objects out of 1000 (max. 8388607)
- 162 compressed objects within 2 object streams
+ 220 PDF objects out of 1000 (max. 8388607)
+ 159 compressed objects within 2 object streams
  35 named destinations out of 1000 (max. 500000)
  143 words of extra memory for PDF output out of 10000 (max. 10000000)
 
