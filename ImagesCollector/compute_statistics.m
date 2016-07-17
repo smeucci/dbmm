@@ -64,18 +64,12 @@ function [results] = compute_statistics()
         
     end
     
-    tps = 0; fps = 0; tns = 0; fns = 0; tot_images_prediction = 0; tot_images_validation = 0;
-    for i = 1:size(results, 1)
-        
-        tps = tps + results(i).tp;
-        fps = fps + results(i).fp;
-        tns = tns + results(i).tn;
-        fns = fns + results(i).fn;
-        
-        tot_images_prediction = tot_images_prediction + results(i).tp;
-        tot_images_validation = tot_images_validation + results(i).groundtruth;
-        
-    end
+    tps = sum([results.tp]);
+    fps = sum([results.fp]);
+    tns = sum([results.tn]);
+    fns = sum([results.fn]);
+    tot_images_prediction = tps + fps;
+    tot_images_validation = sum([results.groundtruth]);
     
     TPR = tps / (tps + fns);
     TNR = tns / (fps + tns);
@@ -95,9 +89,6 @@ function [results] = compute_statistics()
     fprintf('- Accuracy: %.3f\n', ACCURACY);
     fprintf('\n- Precision: %.3f\n', PRECISION);
     fprintf('- Recall: %.3f\n', RECALL);
-
-    %fprintf('\n- Correctly predicted on average: %.2f\n', tpr + tnr);
-    %fprintf('- Not correctly predicted on average: %.2f\n', fpr + fnr);    
     
     fprintf('\n- Average number of images per identity after PREDICTION: %d\n', round(tot_images_prediction));
     fprintf('- Average number of images per identity after VALIDATION: %d\n', round(tot_images_validation));
