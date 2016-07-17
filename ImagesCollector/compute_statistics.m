@@ -58,6 +58,7 @@ function [results] = compute_statistics()
         result.fp = fp;
         result.tn = tn;
         result.fn = fn;
+        result.prediction = tp + fp;
         result.groundtruth = tp + fn;
         
         results = [results; result];
@@ -68,7 +69,7 @@ function [results] = compute_statistics()
     fps = sum([results.fp]);
     tns = sum([results.tn]);
     fns = sum([results.fn]);
-    tot_images_prediction = tps + fps;
+    tot_images_prediction = sum([results.prediction]);
     tot_images_validation = sum([results.groundtruth]);
     
     TPR = tps / (tps + fns);
